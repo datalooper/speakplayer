@@ -2,25 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f0e75bff-f4a6-41ad-ac43-599f16dcb4a3" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dev/public/js/init.js" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/dev/public/scss/_music.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/trunk/admin/class-plugin-name-admin.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/trunk/admin/css/plugin-name-admin.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/trunk/admin/js/plugin-name-admin.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/trunk/admin/partials/plugin-name-admin-display.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/trunk/includes/class-plugin-name-activator.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/trunk/includes/class-plugin-name-deactivator.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/trunk/includes/class-plugin-name-i18n.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/trunk/includes/class-plugin-name-loader.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/trunk/includes/class-plugin-name.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/trunk/plugin-name.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/trunk/public/class-plugin-name-public.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/trunk/public/css/plugin-name-public.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/trunk/public/partials/plugin-name-public-display.php" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dev/Gruntfile.js" afterPath="$PROJECT_DIR$/dev/Gruntfile.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dev/public/scss/_player.scss" afterPath="$PROJECT_DIR$/dev/public/scss/_player.scss" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dev/package.json" afterPath="$PROJECT_DIR$/dev/package.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trunk/uninstall.php" afterPath="$PROJECT_DIR$/trunk/uninstall.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trunk/includes/class-speak-player-activator.php" afterPath="$PROJECT_DIR$/trunk/includes/class-speak-player-activator.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="speakplayer.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -90,8 +73,8 @@
       <file leaf-file-name="class-speak-player-activator.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/trunk/includes/class-speak-player-activator.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5798576" vertical-offset="0" max-vertical-offset="983">
-              <caret line="46" column="0" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.6103764" vertical-offset="0" max-vertical-offset="983">
+              <caret line="48" column="22" selection-start-line="48" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -100,8 +83,8 @@
       <file leaf-file-name="class-speak-player-admin.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/trunk/admin/class-speak-player-admin.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-34.708332" vertical-offset="712" max-vertical-offset="1740">
-              <caret line="103" column="0" selection-start-line="103" selection-start-column="0" selection-end-line="103" selection-end-column="0" />
+            <state vertical-scroll-proportion="-34.083332" vertical-offset="742" max-vertical-offset="1740">
+              <caret line="104" column="44" selection-start-line="104" selection-start-column="44" selection-end-line="104" selection-end-column="44" />
               <folding>
                 <element signature="e#7#192#0#PHP" expanded="true" />
               </folding>
@@ -134,9 +117,9 @@
       <list>
         <option value="$PROJECT_DIR$/dev/public/js/init.js" />
         <option value="$PROJECT_DIR$/trunk/includes/class-speak-player.php" />
+        <option value="$PROJECT_DIR$/trunk/speak_player.php" />
         <option value="$PROJECT_DIR$/trunk/admin/class-speak-player-admin.php" />
         <option value="$PROJECT_DIR$/trunk/includes/class-speak-player-activator.php" />
-        <option value="$PROJECT_DIR$/trunk/speak_player.php" />
       </list>
     </option>
   </component>
@@ -378,24 +361,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/trunk/admin/index.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1007">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trunk/admin/class-speak-player-admin.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-34.708332" vertical-offset="712" max-vertical-offset="1740">
-          <caret line="103" column="0" selection-start-line="103" selection-start-column="0" selection-end-line="103" selection-end-column="0" />
-          <folding>
-            <element signature="e#7#192#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/trunk/admin/partials/speak-player-admin-display.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1007">
@@ -420,10 +385,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/trunk/admin/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1007">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trunk/admin/class-speak-player-admin.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-34.083332" vertical-offset="742" max-vertical-offset="1740">
+          <caret line="104" column="44" selection-start-line="104" selection-start-column="44" selection-end-line="104" selection-end-column="44" />
+          <folding>
+            <element signature="e#7#192#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/trunk/includes/class-speak-player-activator.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5798576" vertical-offset="0" max-vertical-offset="983">
-          <caret line="46" column="0" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.6103764" vertical-offset="0" max-vertical-offset="983">
+          <caret line="48" column="22" selection-start-line="48" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
           <folding />
         </state>
       </provider>
