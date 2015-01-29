@@ -46,6 +46,7 @@ class Speak_Player_Activator {
         // now register the post type
 
         register_post_type( $post_type_slug, $args );
+        print_r($post_type_slug);
 	}
 
 }
