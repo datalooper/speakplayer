@@ -7,16 +7,13 @@ module.exports = function(grunt) {
           }
       },
     sass: {
-      options: {
-        includePaths: ['public/scss']
-      },
       dist: {
         options: {
-          outputStyle: 'expanded',
-          sourceMap: true
+          style: 'expanded',
+          sourcemap: 'inline'
         },
         files: {
-          '../trunk/public/css/app.css': 'public/scss/app.scss'
+          '../trunk/public/css/speakplayer-public.css': 'public/scss/app.scss'
         }
       }
     },
@@ -42,6 +39,9 @@ module.exports = function(grunt) {
       }
     },
     watch: {
+      options: {
+        livereload : true
+      },
       grunt: { files: ['Gruntfile.js'] },
       sass: {
         files: 'public/scss/*.scss',
@@ -52,12 +52,6 @@ module.exports = function(grunt) {
         files : 'public/hb/*.*',
         tasks: ['shell']
     },
-      livereload: { 
-        files: ['*.html', 'js/**/*.{js,json}', 'css/*.css','img/**/*.{png,jpg,jpeg,gif,webp,svg}'], 
-        options: { 
-          livereload: true 
-        } 
-      },
       concat: {
         files: ['public/js/*.js'],
         tasks: 'compileJS',
@@ -68,7 +62,7 @@ module.exports = function(grunt) {
     }
   });
 
-grunt.loadNpmTasks('grunt-sass');
+grunt.loadNpmTasks('grunt-contrib-sass');
 grunt.loadNpmTasks('grunt-shell');
 grunt.loadNpmTasks('grunt-autoprefixer');
 grunt.loadNpmTasks('grunt-contrib-watch');

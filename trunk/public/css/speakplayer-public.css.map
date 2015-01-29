@@ -1,0 +1,8 @@
+{
+"version": 3,
+"mappings": ";AAAA,EAAE;EACD,KAAK,EAAC,IAAI;;;;ACDX,QAAS;EACR,KAAK,EAAE,GAAG;EACV,cAAc,EAAE,GAAG;EACnB,UAAU,EAAE,GAAG;EACf,gBAAgB,EAAE,GAAG",
+"sources": ["public/scss/_colors.scss","public/scss/_player.scss"],
+"sourcesContent": ["h2{\n\tcolor:#000;\n}",".awesome {\n\tcolor: red;\n\tpadding-bottom: 5px;\n\tborder-top: 5px;\n\tbackground-color: red;\n}"],
+"names": [],
+"file": "speakplayer-public.css"
+}

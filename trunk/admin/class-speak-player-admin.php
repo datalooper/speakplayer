@@ -6,8 +6,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    Plugin_Name
- * @subpackage Plugin_Name/admin
+ * @package    Speak_Player
+ * @subpackage Speak_Player/admin
  */
 
 /**
@@ -16,11 +16,11 @@
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the dashboard-specific stylesheet and JavaScript.
  *
- * @package    Plugin_Name
- * @subpackage Plugin_Name/admin
+ * @package    Speak_Player
+ * @subpackage Speak_Player/admin
  * @author     Your Name <email@example.com>
  */
-class Plugin_Name_Admin {
+class Speak_Player_Admin {
 
 	/**
 	 * The ID of this plugin.
@@ -65,15 +65,15 @@ class Plugin_Name_Admin {
 		 * This function is provided for demonstration purposes only.
 		 *
 		 * An instance of this class should be passed to the run() function
-		 * defined in Plugin_Name_Loader as all of the hooks are defined
+		 * defined in Speak_Player_Loader as all of the hooks are defined
 		 * in that particular class.
 		 *
-		 * The Plugin_Name_Loader will then create the relationship
+		 * The Speak_Player_Loader will then create the relationship
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/plugin-name-admin.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/speak-player-admin.css', array(), $this->version, 'all' );
 
 	}
 
@@ -88,16 +88,23 @@ class Plugin_Name_Admin {
 		 * This function is provided for demonstration purposes only.
 		 *
 		 * An instance of this class should be passed to the run() function
-		 * defined in Plugin_Name_Loader as all of the hooks are defined
+		 * defined in Speak_Player_Loader as all of the hooks are defined
 		 * in that particular class.
 		 *
-		 * The Plugin_Name_Loader will then create the relationship
+		 * The Speak_Player_Loader will then create the relationship
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/plugin-name-admin.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/speak-player-admin.js', array( 'jquery' ), $this->version, false );
 
 	}
+
+    public function create_admin_menu(){
+        $menuSlug = 'sound_manager_options';
+        $menuSlug2 = 'sound_manager_folder';
+        add_submenu_page('edit.php?post_type=sounds', 'Add New Sound', 'Add New Sound', 'manage_options', $menuSlug, 'sound_manager_admin_page');
+        add_submenu_page('edit.php?post_type=sounds', 'Add Sounds from Folder', 'Add Sounds from Folder', 'manage_options', $menuSlug2, 'sound_manager_folder_page');
+    }
 
 }
