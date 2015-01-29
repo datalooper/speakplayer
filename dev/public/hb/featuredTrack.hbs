@@ -1,0 +1,28 @@
+<div id="featured" class="song cf" data-song-id ="{{id}}">
+    <div class='songImg'><img src="{{albumArtUrl}}"/>
+        <a class='playNow' href='#' >
+            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16.983px" height="40px" viewBox="0 0 16.983 25" enable-background="new 0 0 16.983 25" xml:space="preserve">
+                    <g>
+                        <path d="M0,1c0-0.55,0.363-0.734,0.807-0.409l15.37,11.264c0.443,0.325,0.443,0.857,0,1.183L0.807,24.303
+                            C0.363,24.628,0,24.443,0,23.894V1z"/>
+                    </g>
+                </svg>
+
+        </a>
+        <a class="pause" href="#"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="23.379px" height="27px" viewBox="0 0 23.379 27" enable-background="new 0 0 23.379 27" xml:space="preserve"><rect x="14.678" y="-0.003"  width="6.701" height="27.007"/><rect x="2" y="-0.003" width="6.701" height="27.007"/></svg>
+        </a></div>
+    <div class='songInfo'>
+        {{#if isFeatured}}
+        <p class='status'>Featured</p>
+        {{else}}
+        <p class='status'>Currently Playing</p>
+        {{/if}}
+
+
+                <p class='songName'>{{songName}} <span class='by'>by</span></p><a class='artistName' href=''>{{artistName}}</a>
+        <p class='tag'>Categorized as
+            <a href='#' class='genre filterLink'>{{genre}}</a> released on <a class='album filterLink' href='#'>{{albumName}}</a>
+            {{releaseDate}}</p>
+        <p class='trackInfo'>{{trackInfo}}</p></div>
+
+</div>
