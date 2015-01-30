@@ -95,8 +95,13 @@ class Speak_Player_Public {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
+        wp_enqueue_script( 'underscore', plugin_dir_url( __FILE__ ) . 'js/underscore.js', array( 'jquery' ), $this->version, true );
 
-		wp_enqueue_script( $this->speak_player, plugin_dir_url( __FILE__ ) . 'js/speakplayer-public.js', array( 'jquery' ), $this->version, false );
+        wp_enqueue_script( 'backbone', plugin_dir_url( __FILE__ ) . 'js/backbone.js', array( 'jquery' ), $this->version, true );
+
+        wp_enqueue_script( 'marionette', plugin_dir_url( __FILE__ ) . 'js/backbone.marionette.js', array( 'jquery' ), $this->version, true );
+
+		wp_enqueue_script( $this->speak_player, plugin_dir_url( __FILE__ ) . 'js/speakplayer-public.js', array( 'jquery' ), $this->version, true );
 
 	}
 

@@ -1,7 +1,3 @@
-/**
- * Created by vcimo5 on 1/29/15.
- */
-
 var SpeakPlayer = new Backbone.Marionette.Application();
 
 function isTouchDevice() {
