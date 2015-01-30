@@ -4,6 +4,7 @@
 SpeakPlayer.module("Library", function(Library, App, Backbone, Marionette, $, _){
     var featuredSong;
     var songs; 
+    var region;
 
     Library.addInitializer(function(options) {
         console.log('Library initialize');
@@ -12,8 +13,9 @@ SpeakPlayer.module("Library", function(Library, App, Backbone, Marionette, $, _)
     	});
 
         //TODO: Update this to have 'featured' by the song object.
-        this.featuredSong = libraryContainer.find('#featured');
-        this.preparePlayerData();
+        // this.featuredSong = '';
+        // this.region = SpeakPlayer.libraryRegion;
+        Library.controller.preparePlayerData();
     });
 
     //Declare Song model and Song Collection
@@ -22,7 +24,7 @@ SpeakPlayer.module("Library", function(Library, App, Backbone, Marionette, $, _)
 
     var SongItemView = Backbone.Marionette.ItemView.extend({
     	model: SongItemModel,
-    	template: '',
+    	// template: '',
         events: {'click': 'songItemClicked'},
         songItemClicked: function(){
             console.log('SpeakPlayer.events.songSelected' + this.model.get('name'));
@@ -32,7 +34,7 @@ SpeakPlayer.module("Library", function(Library, App, Backbone, Marionette, $, _)
 
     var SongItemListView = Backbone.Marionette.CollectionView.extend({
     	ItemView: SongItemView,
-    	tagName: ''
+    	// tagName: ''
     });
 
     var Controller = Backbone.Marionette.Controller.extend({
@@ -65,8 +67,9 @@ SpeakPlayer.module("Library", function(Library, App, Backbone, Marionette, $, _)
 	        };
 
 	        // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
-	        $.post(ajaxurl, data, function (response) {
-	            var jsonResponse = $.parseJSON(response);
+	        jQuery.post(ajaxurl, data, function (response) {
+	            var jsonResponse = jQuery.parseJSON(response);
+                console.log('response ' + JSON.stringify(jsonResponse));
 	            Library.trigger('songsRetrieved', jsonResponse);
 	        });
 	    }
