@@ -4,14 +4,28 @@
 
 var SpeakPlayer = new Backbone.Marionette.Application();
 
-function is_touch_device() {
+function isTouchDevice() {
     return 'ontouchstart' in window // works on most browsers
     || 'onmsgesturechange' in window; // works on ie10
+};
+
+function loadEventStrings() {
+	return {	
+			"songsRetrieved": "songsRetrieved",
+			"songLoaded" : "songLoaded",
+			"songStarted" : "songStarted",
+			"songSelected" : "songStarted",
+			"next" : "next",
+			"play" : "play",
+			"pause" : "pause",
+			"stop" : "stop"
+		}
 };
 
 //Initialization Events
 SpeakPlayer.on('initialize:before', function(options) {
 	console.log('Initialization starting.');
+	SpeakPlayer.events = loadEventStrings();
 });
 
 SpeakPlayer.on('initialize:after', function(options) {
@@ -27,21 +41,19 @@ SpeakPlayer.on('start', function(options) {
 SpeakPlayer.addInitializer(function(options) {
 	//add regions
 	SpeakPlayer.addRegions({
+		//TODO: Add the rest of the regions.
 		libraryRegion: options.libraryContainer,
 		playerRegion: options.playerContainer,
 		playlistRegion: options.playlistContainer
 	});
 
-	SpeakPlayer.isTouchDevice = is_touch_device();
+	SpeakPlayer.isTouchDevice = isTouchDevice();
 
-	//Init Modules
-	SpeakPlayer.Library.init();
-	SpeakPlayer.Playlist.init();
-	SpeakPlayer.Seekbar.init();
-	SpeakPlayer.VolumeSlider.init();
-	SpeakPlayer.Search.init();
-	SpeakPlayer.FeaturedSong.init();
 });
 
 //Start the application. Options should contain 'libraryContainer', 'playerContainer', 'playlistContainer'
+var options = {
+	//this object will get passed to initialization events
+};
+
 App.start(options);
