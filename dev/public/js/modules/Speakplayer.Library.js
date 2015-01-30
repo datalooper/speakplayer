@@ -22,11 +22,11 @@ SpeakPlayer.module("Library", function(Library, App, Backbone, Marionette, $, _)
     var SongItemView = Backbone.Marionette.ItemView.extend({
     	model: SongItemModel,
     	template: '',
-        events: {'click': songItemClicked},
-        songItemClicked: function(){
+        events: {'click': function() {
             console.log('SpeakPlayer.events.songSelected' + this.model.get('name'));
             // Viewer.vent.trigger(this.model.get('eventToRaise'), this);
-        }  
+        }}
+
     });
 
     var SongListView = Backbone.Marionette.CollectionView.extend({
@@ -36,15 +36,15 @@ SpeakPlayer.module("Library", function(Library, App, Backbone, Marionette, $, _)
 
     var Controller = Backbone.Marionette.Controller.extend({
         initialize: function (options) {
-            _.bindAll(this);
-            this.region = options.region;
-            //convert tools array to a collection
-            this.collection = new ToolItemCollection(options.toolItems);
-            //create the list view and pass in the collection
-            this.view = new ToolListView({ collection: this.collection });
-            //render it all once, now. Since the items don't change
-            //while the app is running, we never need to re-render
-            this.region.show(this.view);
+            //_.bindAll(this);
+            //this.region = options.region;
+            ////convert tools array to a collection
+            //this.collection = new ToolItemCollection(options.toolItems);
+            ////create the list view and pass in the collection
+            //this.view = new ToolListView({ collection: this.collection });
+            ////render it all once, now. Since the items don't change
+            ////while the app is running, we never need to re-render
+            //this.region.show(this.view);
 
             /*hook into App events*/
             SpeakPlayer.vent.on(SpeakPlayer.events.songsRetrieved, function (data) {

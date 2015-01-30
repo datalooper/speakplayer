@@ -53,7 +53,7 @@ module.exports = function(grunt) {
         tasks: ['shell']
     },
       concat: {
-        files: ['public/js/*.js'],
+        files: ['public/js/*.js','public/js/modules/*.js'],
         tasks: 'compileJS',
         options: {
           spawn: false,

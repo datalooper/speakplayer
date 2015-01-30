@@ -7,6 +7,12 @@
  */
 
 class Speak_Player_Frontend_Link {
+    private $custom_post_name;
+
+    public function __construct( $custom_post_name ) {
+        $this->custom_post_name = $custom_post_name;
+
+    }
 
     function getAudioAttachments(){
         $args = array
@@ -43,29 +49,37 @@ class Speak_Player_Frontend_Link {
 
         die();
     }
+    public function add_ajax_library() {
+        $html = '<script type="text/javascript">';
+        $html .= 'var ajaxurl = "' . admin_url( 'admin-ajax.php' ) . '"';
+        $html .= '</script>';
 
+        echo $html;
+
+    } // end add_ajax_library
     function getSongs(){
-        $args = array( 'post_type' => 'sounds', 'numberposts' => -1 );
+        $args = array( 'post_type' => $this->custom_post_name, 'numberposts' => -1 );
         $postArray = get_posts($args);
         $i = 0;
         $songs = array();
         foreach($postArray as $post){
+
             $thumbnail_id = get_post_thumbnail_id($post->ID);
             $thumbnail_object = get_post($thumbnail_id);
-            $firstGenre =reset( get_the_terms( $post->ID, 'genres' ))->name;
 
             $song = array(
                 "id" => $post->post_name,
                 "songName" => $post->post_title ,   //song name
                 "songUrl" => get_post_meta($post->ID, 'wp_custom_attachment', true), //song url
-                "artistName" => getArtist($post->ID), //artist
-                "albumName" => getAlbum($post->ID), //album
+                "artistName" => get_post_meta($post->ID,'artist')[0], //artist
+                "albumName" => get_post_meta($post->ID,'album')[0],
                 "albumArtUrl" => wp_get_attachment_image_src( $thumbnail_object->ID, 'thumbnail')[0],
-                "genre" => $firstGenre,
+                "genre" => get_post_meta($post->ID,'genre')[0],
                 "releaseDate" => mysql2date('j M Y', $post->post_date),
                 "isFeatured" => in_category("featured", $post->ID),
                 "trackInfo" => $post->post_content,
-                "artistLink" =>  get_post_meta($post->ID, 'artist_link', true)
+                "artistLink" =>  get_post_meta($post->ID, 'artist_link', true),
+
             );
             array_push($songs, $song);
             $i++;

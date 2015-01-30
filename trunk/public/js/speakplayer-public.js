@@ -1,3 +1,15 @@
+/**
+ * Created by vcimo5 on 1/29/15.
+ */
+(function( $ ) {
+    'use strict';
+
+      $(function() {
+          console.log("operating");
+      });
+
+
+})( jQuery );
 ;var SpeakPlayer = new Backbone.Marionette.Application();
 
 function isTouchDevice() {
@@ -26,10 +38,12 @@ SpeakPlayer.on('initialize:before', function(options) {
 
 SpeakPlayer.on('initialize:after', function(options) {
   console.log('Initialization finished');
+
 });
 
 SpeakPlayer.on('start', function(options) {
   	//Dont know what this does... but it was in some sample code durr
+    console.log("backbone started")
   	Backbone.history.start(); 
 });
 
@@ -38,9 +52,9 @@ SpeakPlayer.addInitializer(function(options) {
 	//add regions
 	SpeakPlayer.addRegions({
 		//TODO: Add the rest of the regions.
-		libraryRegion: options.libraryContainer,
-		playerRegion: options.playerContainer,
-		playlistRegion: options.playlistContainer
+		libraryRegion: jQuery('#libraryContainer'),
+		playerRegion: jQuery('#playerContainer'),
+		playlistRegion: jQuery('#playlistContainer')
 	});
 
 	SpeakPlayer.isTouchDevice = isTouchDevice();
@@ -48,11 +62,8 @@ SpeakPlayer.addInitializer(function(options) {
 });
 
 //Start the application. Options should contain 'libraryContainer', 'playerContainer', 'playlistContainer'
-var options = {
-	//this object will get passed to initialization events
-};
+//SpeakPlayer.start();
 
-SpeakPlayer.start(options);
 ;/*
     Sample Module definition for Library module
 */
@@ -82,11 +93,11 @@ SpeakPlayer.module("Library", function(Library, App, Backbone, Marionette, $, _)
     var SongItemView = Backbone.Marionette.ItemView.extend({
     	model: SongItemModel,
     	template: '',
-        events: {'click': songItemClicked},
-        songItemClicked: function(){
+        events: {'click': function() {
             console.log('SpeakPlayer.events.songSelected' + this.model.get('name'));
             // Viewer.vent.trigger(this.model.get('eventToRaise'), this);
-        }  
+        }}
+
     });
 
     var SongListView = Backbone.Marionette.CollectionView.extend({
@@ -96,15 +107,15 @@ SpeakPlayer.module("Library", function(Library, App, Backbone, Marionette, $, _)
 
     var Controller = Backbone.Marionette.Controller.extend({
         initialize: function (options) {
-            _.bindAll(this);
-            this.region = options.region;
-            //convert tools array to a collection
-            this.collection = new ToolItemCollection(options.toolItems);
-            //create the list view and pass in the collection
-            this.view = new ToolListView({ collection: this.collection });
-            //render it all once, now. Since the items don't change
-            //while the app is running, we never need to re-render
-            this.region.show(this.view);
+            //_.bindAll(this);
+            //this.region = options.region;
+            ////convert tools array to a collection
+            //this.collection = new ToolItemCollection(options.toolItems);
+            ////create the list view and pass in the collection
+            //this.view = new ToolListView({ collection: this.collection });
+            ////render it all once, now. Since the items don't change
+            ////while the app is running, we never need to re-render
+            //this.region.show(this.view);
 
             /*hook into App events*/
             SpeakPlayer.vent.on(SpeakPlayer.events.songsRetrieved, function (data) {
