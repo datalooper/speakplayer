@@ -9,9 +9,10 @@
 class Speak_Player_Post_Creator {
 
     public $attachment;
-
-    public function __construct()
+    public $custom_post_type;
+    public function __construct($custom_post_type)
     {
+        $this->custom_post_type = $custom_post_type;
         $this->load_dependencies();
     }
 
@@ -67,29 +68,63 @@ class Speak_Player_Post_Creator {
             if($file->getExtension() == "mp3"){
                 echo $file;
                 $friendlyPath = $this->renameFriendly($file->getPath()."/", $file->getFilename());
-                $id3info = get_id3($friendlyPath);
                 //Valid file found, add to wordpress attachment database
                 // Prepare an array of post data for the attachment.
                 $attachment = array(
                     'guid'           => $friendlyPath,
                     'post_mime_type' => 'audio/mpeg',
-                    'post_title'     => $id3info['title'],
+                    'post_title'     => $file->getFilename(),
                     'post_content'   => '',
                     'post_status'    => 'inherit'
                 );
-                $attachment = wp_insert_attachment( $attachment, $friendlyPath);
-                error_log(wp_get_attachment_url( $attachment ));
-                $fileUrl = wp_slash(wp_get_attachment_url( $attachment ));
-                $id3info['url'] = $fileUrl;
-                $id3info['image'] = processAlbumArtwork($id3info['image'], $friendlyPath);
-                $this->createPost($id3info);
+                $attachment_id = wp_insert_attachment( $attachment, $friendlyPath);
+                $meta = wp_generate_attachment_metadata( $attachment_id, $friendlyPath );
+                $this->createPostFromFolder($attachment_id, $meta);
 
             }
         }
         die();
-
     }
+    function createPostFromFolder($attachment_id, $meta){
+            $attachment = get_post( $attachment_id );
+            if(!empty($attachment->post_title)){
+                // Create post object
+                $new_post = array(
+                    'post_title'    => $meta['title'],
+                    'post_content'  => $attachment->post_content,
+                    'post_status'   => 'publish',
+                    'post_type'     => $this->custom_post_type,
+                    'post_author'   => 1,
+                );
 
+                // Insert the post into the database
+                $post_id = wp_insert_post( $new_post );
+                if($post_id != 0){
+
+                    set_post_thumbnail( $post_id, get_post_thumbnail_id($attachment_id));
+
+                    $this->addToTax($post_id, $meta['artist'], "artists", "", $this->sanitize($meta['artist']) );
+                    $this->addToTax($post_id, $meta['album'] , "albums", "", $this->sanitize($meta['album']) );
+
+                    //links to media library item
+                    add_post_meta($post_id, 'attachment_id', $attachment_id);
+
+                    add_post_meta($post_id, 'artist', $meta['artist']);
+                    add_post_meta($post_id, 'album', $meta['album']);
+                    add_post_meta($post_id, 'genre', $meta['genre']);
+
+
+                    //sound file url
+                    add_post_meta($post_id, 'wp_custom_attachment', $attachment->guid);
+                    update_post_meta($post_id, 'wp_custom_attachment', $attachment->guid);
+
+                    wp_set_object_terms( $post_id, $meta['genre'], 'genres' );
+                    echo get_edit_post_link( $post_id );
+
+
+            }
+        }
+    }
     function renameFriendly($dir, $unfriendlyName){
         $friendlyName = str_replace(' ', '-', $unfriendlyName);
         rename($dir.$unfriendlyName, $dir.$friendlyName);
@@ -99,53 +134,63 @@ class Speak_Player_Post_Creator {
 
 
     function createNewSoundSubmit(){
-        error_log(print_r($_SESSION['attachment']));
-        //echo $this->createPos$_SESSION['post_details']]);
-        //$this->releaseSession($_SESSION['post_details']);
+        $this->createPost($_POST['attachment']);
         die();
 
     }
 
 
-    function createPost($attachment){
-        global $post_type_slug;
-
-        if(!empty($attachment['title'])){
+    function createPost($form_data){
+        $attachment = get_post( $form_data['attachmentId'] );
+        $meta = get_post_meta( $form_data['attachmentId'], '_wp_attachment_metadata')[0];
+        $isFeatured = $form_data['isFeatured'];
+    if(!empty($attachment->post_title)){
             // Create post object
             $new_post = array(
-                'post_title'    => $attachment['title'],
-                'post_content'  => '',
+                'post_title'    => $attachment->post_title,
+                'post_content'  => $attachment->post_content,
                 'post_status'   => 'publish',
-                'post_type'     => $post_type_slug,
+                'post_type'     => $this->custom_post_type,
                 'post_author'   => 1,
-
             );
 
             // Insert the post into the database
-
-            $post_id = wp_insert_post( $new_post );
+        $post_id = wp_insert_post( $new_post );
             if($post_id != 0){
                 if($isFeatured){
-                    addToTax($post_id, "Featured", "category", "Featured Sounds", "featured" );
+                    $this->addToTax($post_id, "Featured", "category", "Featured Sounds", "featured" );
                 }
-                addFeaturedImage($post_id, $attachment['image']);
-                addToTax($post_id, $attachment['artist'], "artists", "", sanitize($attachment['artist']) );
-                addToTax($post_id, $attachment['album'] , "albums", "", sanitize($attachment['album']) );
+
+                set_post_thumbnail( $post_id, get_post_thumbnail_id($form_data['attachmentId']));
+
+                $this->addToTax($post_id, $meta['artist'], "artists", "", $this->sanitize($meta['artist']) );
+                $this->addToTax($post_id, $meta['album'] , "albums", "", $this->sanitize($meta['album']) );
+
+                //links to media library item
+                add_post_meta($post_id, 'attachment_id', $form_data['attachmentId']);
+
+                add_post_meta($post_id, 'artist', $meta['artist']);
+                add_post_meta($post_id, 'album', $meta['album']);
+                add_post_meta($post_id, 'genre', $meta['genre']);
+
 
                 //sound file url
-                add_post_meta($post_id, 'wp_custom_attachment', $attachment['url']);
-                update_post_meta($post_id, 'wp_custom_attachment', $attachment['url']);
+                add_post_meta($post_id, 'wp_custom_attachment', $attachment->guid);
+                update_post_meta($post_id, 'wp_custom_attachment', $attachment->guid);
 
-                //video file url
-                add_post_meta($post_id, 'video_link', $attachment['videoLink']);
-                update_post_meta($post_id, 'video_link', $attachment['videoLink']);
+                //video url
+                add_post_meta($post_id, 'video_link', $form_data['videoLink']);
+                update_post_meta($post_id, 'video_link', $form_data['videoLink']);
 
-                wp_set_object_terms( $post_id, $attachment['genre'], 'genres' );
-                attachSoundtoPost($attachment, $attachment['url'], $post_id);
-                return admin_url( 'post.php?post=' . $post_id ) . '&action=edit';
+                //artist link
+                add_post_meta($post_id, 'artist_link', $form_data['artistLink']);
+                update_post_meta($post_id, 'artist_link', $form_data['artistLink']);
+
+                wp_set_object_terms( $post_id, $meta['genre'], 'genres' );
+                echo get_edit_post_link( $post_id );
+
             }
         }
-        return 0;
     }
 
     function releaseSession($sessionVar){
@@ -172,48 +217,17 @@ class Speak_Player_Post_Creator {
         }
         wp_set_object_terms($post_id, $slug, $taxonomy, true);
     }
-    function addFeaturedImage($post_id, $image){
-        $filetype = wp_check_filetype( basename( $image ), null );
-        // Prepare an array of post data for the attachment.
-        $attachment = array(
-            'guid'           => $wp_upload_dir['url'] . '/' . basename( $image ),
-            'post_mime_type' => $filetype['type'],
-            'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $image  ) ),
-            'post_content'   => '',
-            'post_status'    => 'inherit'
-        );
 
-        $attachmentId = wp_insert_attachment( $attachment, $image , $post_id);
-        wp_update_attachment_metadata( $attachmentId, wp_generate_attachment_metadata( $attachmentId, $image ));
-        add_post_meta( $post_id, '_thumbnail_id', $attachmentId, true );
-    }
+function updatePostSound($urlPath, $id){
+    global $wpdb;
+    $absPath = getAbsPath($urlPath);
 
-    function attachSoundtoPost($details, $filePath, $post_id){
-        // Check the type of tile. We'll use this as the 'post_mime_type'.
-        $filetype = wp_check_filetype( $filePath, null );
-        getAbsPath($filePath);
-        // Prepare an array of post data for the attachment.
-        $attachment = array(
-            'guid'           => $absPath,
-            'post_mime_type' => $filetype['type'],
-            'post_title'     => preg_replace('/\.[^.]+$/', '', basename($filePath)),
-            'post_content'   => '',
-            'post_status'    => 'inherit'
-        );
+    $id3 = get_ID3($absPath);
+    $_POST['mt_field_one'] = $id3['artist'];
+    $_POST['mt_field_two'] = $id3['album'];
+    $post_title = $id3['title'];
+    $where = array( 'ID' => $id );
+    $wpdb->update( $wpdb->posts, array( 'post_title' => $post_title ), $where );
+}
 
-        // Insert the attachment.
-        $attach_id = wp_insert_attachment( $attachment, $absPath, $post_id  );
-    }
-    function updatePostSound($urlPath, $id){
-        global $wpdb;
-        $absPath = getAbsPath($urlPath);
-
-        $id3 = get_ID3($absPath);
-        $_POST['mt_field_one'] = $id3['artist'];
-        $_POST['mt_field_two'] = $id3['album'];
-        $post_title = $id3['title'];
-        $where = array( 'ID' => $id );
-        $wpdb->update( $wpdb->posts, array( 'post_title' => $post_title ), $where );
-
-    }
 } 

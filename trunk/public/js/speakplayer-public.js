@@ -52,7 +52,7 @@ var options = {
 	//this object will get passed to initialization events
 };
 
-//SpeakPlayer.start(options);
+SpeakPlayer.start(options);
 ;/*
     Sample Module definition for Library module
 */

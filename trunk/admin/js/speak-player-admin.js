@@ -13,14 +13,34 @@ jQuery(document).ready(function($){
         $(this).parent().remove();
         return false;
     });
-
+    $.fn.serializeObject = function()
+    {
+        var o = {};
+        var a = this.serializeArray();
+        $.each(a, function() {
+            if (o[this.name] !== undefined) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return o;
+    };
     $('#soundForm').submit(function(e){
+        var vals = $(this).serializeObject();
+        vals.attachmentId = $(window).data('attachmentId');
+        vals.isFeatured = $('.featured').is(":checked");
+
         var errorSelector = $('.error'), data = {
             'action': 'createNewSoundSubmit',
-            'attachment': $(this).serialize()
+            'attachment': vals
         };
         // We can also pass the url value separately from ajaxurl for front end AJAX implementations
         jQuery.post(ajax_object.ajax_url, data, function(response) {
+            console.log(response);
             if(response != "0"){
                 errorSelector.fadeOut();
                 $(".updated").html("<p>Sound created! Manage Here</p><a href='"+response+ "'>" + response+"</a>" );

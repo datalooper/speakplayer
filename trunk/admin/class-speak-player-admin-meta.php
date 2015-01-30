@@ -111,11 +111,12 @@ class Speak_Player_Admin_Meta
         $videoLink = get_post_meta(get_the_ID(), 'video_link', true);
         $html = '';
         if (!empty($videoLink)) {
-            $html .= "<p class='description'>Current YouTube ID: </p><a href='";
-            $html .= $videoLink . "'>" . $videoLink . "</a>";
+            $html .= "<p class='description'>Current YouTube ID: ".$videoLink."</p>";
+        } else {
+            $html .= "<p style='margin-top:10px;' class='description'>Specify YouTube ID, for example: id2i49</p>";
         }
-        $html .= "<p style='margin-top:10px;' class='description'>Specify YouTube ID, for example: id2i49</p>";
         $html .= "<input type='text' name='videoLink' id='video_link' size='40'/>";
+
         echo $html;
     }
 

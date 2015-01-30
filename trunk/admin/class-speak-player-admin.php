@@ -128,6 +128,68 @@ class Speak_Player_Admin {
         $this->create_taxonomy("Albums", "Album", "albums");
     }
 
+    public function edit_columns($columns){
+        $columns = array(
+            'cb' => '<input type="checkbox" />',
+            'title' => __( 'Song Title' ),
+            'artist' => __( 'Artist' ),
+            'album' => __( 'Album' ),
+            'genre' => __( 'Genre' )
+        );
+
+        return $columns;
+
+    }
+
+function edit_sort_orderby( $query ) {
+
+    /**
+     * We only want our code to run in the main WP query
+     * AND if an orderby query variable is designated.
+     */
+    if ( $query->is_main_query() && ( $orderby = $query->get( 'orderby' ) ) ) {
+
+        switch( $orderby ) {
+
+            case 'artist':
+                // set our query's meta_key, which is used for custom fields
+                $query->set( 'meta_key', 'artist' );
+                $query->set( 'orderby', 'meta_value' );
+
+                break;
+            case 'album':
+                // set our query's meta_key, which is used for custom fields
+                $query->set( 'meta_key', 'album' );
+                $query->set( 'orderby', 'meta_value' );
+
+                break;
+            case 'genre':
+                // set our query's meta_key, which is used for custom fields
+                $query->set( 'meta_key', 'genre' );
+                $query->set( 'orderby', 'meta_value' );
+
+                break;
+        }
+
+    }
+
+}
+
+    public function edit_sortable_columns($columns){
+        $columns['artist'] = 'artist';
+        $columns['album'] = 'album';
+        $columns['genre'] = 'genre';
+
+        //To make a column 'un-sortable' remove it from the array
+        //unset($columns['date']);
+
+        return $columns;
+    }
+    public function manage_column($column, $post_id){
+        global $post;
+        echo array_pop(get_post_meta($post_id, $column));
+
+    }
     public function create_taxonomy($name, $singular_name, $slug){
     // add a hierarchical taxonomy called Genre (same as Post Categories)
 

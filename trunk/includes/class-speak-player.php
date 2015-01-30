@@ -56,8 +56,9 @@ class Speak_Player {
 	 * @var      string    $version    The current version of the plugin.
 	 */
 	protected $version;
+    private $custom_post_type = "sounds";
 
-	/**
+    /**
 	 * Define the core functionality of the plugin.
 	 *
 	 * Set the plugin name and the plugin version that can be used throughout the plugin.
@@ -175,9 +176,9 @@ class Speak_Player {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Speak_Player_Admin( $this->get_plugin_name(), $this->get_version(), 'sounds' );
-        $plugin_admin_meta = new Speak_Player_Admin_Meta($this->get_plugin_name(), $this->get_version(), 'sounds');
-        $plugin_post_creator = new Speak_Player_Post_Creator();
+		$plugin_admin = new Speak_Player_Admin( $this->get_plugin_name(), $this->get_version(), $this->custom_post_type );
+        $plugin_admin_meta = new Speak_Player_Admin_Meta($this->get_plugin_name(), $this->get_version(), $this->custom_post_type);
+        $plugin_post_creator = new Speak_Player_Post_Creator($this->custom_post_type);
         $frontend_link = new Speak_Player_Frontend_Link();
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
@@ -196,6 +197,12 @@ class Speak_Player {
         $this->loader->add_action( 'wp_ajax_uploader_callback',$plugin_post_creator, 'uploaderCallback' );
         $this->loader->add_action( 'wp_ajax_get_songs', $frontend_link,  'getAudioAttachments' );
         $this->loader->add_action( 'wp_ajax_nopriv_get_songs', $frontend_link, 'getAudioAttachments' );
+        $this->loader->add_action( 'manage_edit-'.$this->custom_post_type.'_columns', $plugin_admin, 'edit_columns' );
+        $this->loader->add_action( 'manage_'.$this->custom_post_type.'_posts_custom_column', $plugin_admin, 'manage_column',10,2 );
+        $this->loader->add_action( 'manage_edit-'.$this->custom_post_type.'_sortable_columns', $plugin_admin, 'edit_sortable_columns' );
+        $this->loader->add_action( 'pre_get_posts', $plugin_admin, 'edit_sort_orderby', 1 );
+
+
     }
 
 	/**
