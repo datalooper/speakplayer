@@ -52,7 +52,7 @@ SpeakPlayer.module("Library", function(Library, App, Backbone, Marionette, $, _)
             /*hook into App events*/
             SpeakPlayer.vent.on('songsRetrieved', function (data) {
                 console.log('SpeakPlayer.Library caught event: ' + 'songsRetrieved');
-
+                Library.controller.buildSongList(data);
             });     
 
             SpeakPlayer.vent.on('songSelected', function (song) {
@@ -70,9 +70,27 @@ SpeakPlayer.module("Library", function(Library, App, Backbone, Marionette, $, _)
 	        $.post(ajaxurl, data, function (response) {
 	            var jsonResponse = $.parseJSON(response);
                 console.log('response ' + JSON.stringify(jsonResponse));
-	            Library.trigger('songsRetrieved', jsonResponse);
+	            SpeakPlayer.vent.trigger('songsRetrieved', jsonResponse);
 	        });
-	    }
+	    },
+
+        buildSongList: function (obj) {
+            $.each(obj, function (key, song) {
+                var songObj = new SpeakPlayer.Song(song);
+
+                if(songObj.isFeatured && Library.featuredSong == null){
+                    Library.featuredSong = songObj;
+                } else if(window.location.hash.substring(1) == songObj.id){
+                    Library.featuredSong = songObj;
+                }
+
+                // if($.inArray(songObj.genre, SpeakPlayer.Player.genres) == -1){
+                //     SpeakPlayer.Player.genres.push(songObj.genre);
+                // }
+
+                // SpeakPlayer.Player.songs.push(songObj);
+            });
+        }
     });
 
 

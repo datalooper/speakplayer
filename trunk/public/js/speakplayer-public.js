@@ -64,18 +64,42 @@ SpeakPlayer.addInitializer(function(options) {
 
 });
 
-SpeakPlayer.vent.on('all', function (evt, model) {
-    console.log('DEBUG: Event Caught: ' + evt);
-    if (model) {
-       console.dir(model);
-    }
-});
+//DEBUG
+// SpeakPlayer.vent.on('all', function (evt, model) {
+//     console.log('DEBUG: Event Caught: ' + evt);
+//     if (model) {
+//        console.dir(model);
+//     }
+// });
 
 //Start the application. Options should contain 'libraryContainer', 'playerContainer', 'playlistContainer'
 var options = {
 	//this object will get passed to initialization events
 };
-;/*
+;/**
+ * Created by vcimo5 on 9/30/14.
+ */
+//defines song model
+
+SpeakPlayer.Song = function(obj) {
+    this.isFeatured = false;
+    this.isPlaying = false,
+    this.isLoaded = false,
+    this.trackInfo = '',
+    this.artistName = 'artist',
+    this.albumName = 'album',
+    this.songName = 'track',
+    this.songUrl = '',
+    this.releaseDate = '',
+    this.albumArtUrl = '',
+    this.id = '-1',
+    this.genre = '',
+    this.artistLink = ''
+
+
+    // IF AN OBJECT WAS PASSED THEN INITIALISE PROPERTIES FROM THAT OBJECT
+    for (var prop in obj) this[prop] = obj[prop];
+};/*
     Sample Module definition for Library module
 */
 SpeakPlayer.module("FeaturedSound", function(Library, App, Backbone, Marionette, $, _){
@@ -134,7 +158,7 @@ SpeakPlayer.module("Library", function(Library, App, Backbone, Marionette, $, _)
             /*hook into App events*/
             SpeakPlayer.vent.on('songsRetrieved', function (data) {
                 console.log('SpeakPlayer.Library caught event: ' + 'songsRetrieved');
-
+                Library.controller.buildSongList(data);
             });     
 
             SpeakPlayer.vent.on('songSelected', function (song) {
@@ -152,9 +176,27 @@ SpeakPlayer.module("Library", function(Library, App, Backbone, Marionette, $, _)
 	        $.post(ajaxurl, data, function (response) {
 	            var jsonResponse = $.parseJSON(response);
                 console.log('response ' + JSON.stringify(jsonResponse));
-	            Library.trigger('songsRetrieved', jsonResponse);
+	            SpeakPlayer.vent.trigger('songsRetrieved', jsonResponse);
 	        });
-	    }
+	    },
+
+        buildSongList: function (obj) {
+            $.each(obj, function (key, song) {
+                var songObj = new SpeakPlayer.Song(song);
+
+                if(songObj.isFeatured && Library.featuredSong == null){
+                    Library.featuredSong = songObj;
+                } else if(window.location.hash.substring(1) == songObj.id){
+                    Library.featuredSong = songObj;
+                }
+
+                // if($.inArray(songObj.genre, SpeakPlayer.Player.genres) == -1){
+                //     SpeakPlayer.Player.genres.push(songObj.genre);
+                // }
+
+                // SpeakPlayer.Player.songs.push(songObj);
+            });
+        }
     });
 
 

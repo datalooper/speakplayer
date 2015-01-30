@@ -52,12 +52,13 @@ SpeakPlayer.addInitializer(function(options) {
 
 });
 
-SpeakPlayer.vent.on('all', function (evt, model) {
-    console.log('DEBUG: Event Caught: ' + evt);
-    if (model) {
-       console.dir(model);
-    }
-});
+//DEBUG
+// SpeakPlayer.vent.on('all', function (evt, model) {
+//     console.log('DEBUG: Event Caught: ' + evt);
+//     if (model) {
+//        console.dir(model);
+//     }
+// });
 
 //Start the application. Options should contain 'libraryContainer', 'playerContainer', 'playlistContainer'
 var options = {
