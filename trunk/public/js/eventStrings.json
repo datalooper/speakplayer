@@ -1,0 +1,11 @@
+{	
+	"events" : {
+		"songLoaded" : "songLoaded",
+		"songStarted" : "songStarted",
+		"songSelected" : "songStarted",
+		"next" : "next",
+		"play" : "play",
+		"pause" : "pause",
+		"stop" : "stop"
+	}
+}

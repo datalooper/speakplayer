@@ -43,9 +43,9 @@ SpeakPlayer.addInitializer(function(options) {
 	//add regions
 	SpeakPlayer.addRegions({
 		//TODO: Add the rest of the regions.
-		// libraryRegion: options.libraryContainer,
-		// playerRegion: options.playerContainer,
-		// playlistRegion: options.playlistContainer
+		libraryRegion: options.libraryContainer,
+		playerRegion: options.playerContainer,
+		playlistRegion: options.playlistContainer
 	});
 
 	SpeakPlayer.isTouchDevice = isTouchDevice();
@@ -56,3 +56,5 @@ SpeakPlayer.addInitializer(function(options) {
 var options = {
 	//this object will get passed to initialization events
 };
+
+App.start(options);
