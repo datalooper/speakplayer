@@ -56,4 +56,4 @@ var options = {
 	//this object will get passed to initialization events
 };
 
-App.start(options);
+SpeakPlayer.start(options);
