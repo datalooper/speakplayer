@@ -10,7 +10,11 @@
 
 
 })( jQuery );
-;var SpeakPlayer = new Backbone.Marionette.Application();
+;/**
+ * Created by vcimo5 on 1/29/15.
+ */
+
+var SpeakPlayer = new Backbone.Marionette.Application();
 
 function isTouchDevice() {
     return 'ontouchstart' in window // works on most browsers
@@ -33,17 +37,16 @@ function loadEventStrings() {
 //Initialization Events
 SpeakPlayer.on('initialize:before', function(options) {
 	console.log('Initialization starting.');
-	SpeakPlayer.events = loadEventStrings();
+	//This doesnt seem to work
+	// SpeakPlayer.events = loadEventStrings();
 });
 
 SpeakPlayer.on('initialize:after', function(options) {
   console.log('Initialization finished');
-
 });
 
 SpeakPlayer.on('start', function(options) {
   	//Dont know what this does... but it was in some sample code durr
-    console.log("backbone started")
   	Backbone.history.start(); 
 });
 
@@ -52,9 +55,9 @@ SpeakPlayer.addInitializer(function(options) {
 	//add regions
 	SpeakPlayer.addRegions({
 		//TODO: Add the rest of the regions.
-		libraryRegion: jQuery('#libraryContainer'),
-		playerRegion: jQuery('#playerContainer'),
-		playlistRegion: jQuery('#playlistContainer')
+		// libraryRegion: options.libraryContainer,
+		// playerRegion: options.playerContainer,
+		// playlistRegion: options.playlistContainer
 	});
 
 	SpeakPlayer.isTouchDevice = isTouchDevice();
@@ -62,8 +65,9 @@ SpeakPlayer.addInitializer(function(options) {
 });
 
 //Start the application. Options should contain 'libraryContainer', 'playerContainer', 'playlistContainer'
-//SpeakPlayer.start();
-
+var options = {
+	//this object will get passed to initialization events
+};
 ;/*
     Sample Module definition for Library module
 */
@@ -77,6 +81,7 @@ SpeakPlayer.module("Library", function(Library, App, Backbone, Marionette, $, _)
     var songs; 
 
     Library.addInitializer(function(options) {
+        console.log('Library initialize');
     	Library.controller = new Controller({
     		//set any controller fields passed in from options
     	});
@@ -93,42 +98,43 @@ SpeakPlayer.module("Library", function(Library, App, Backbone, Marionette, $, _)
     var SongItemView = Backbone.Marionette.ItemView.extend({
     	model: SongItemModel,
     	template: '',
-        events: {'click': function() {
+        events: {'click': 'songItemClicked'},
+        songItemClicked: function(){
             console.log('SpeakPlayer.events.songSelected' + this.model.get('name'));
             // Viewer.vent.trigger(this.model.get('eventToRaise'), this);
-        }}
-
+        }  
     });
 
-    var SongListView = Backbone.Marionette.CollectionView.extend({
+    var SongItemListView = Backbone.Marionette.CollectionView.extend({
     	ItemView: SongItemView,
     	tagName: ''
     });
 
     var Controller = Backbone.Marionette.Controller.extend({
         initialize: function (options) {
-            //_.bindAll(this);
-            //this.region = options.region;
-            ////convert tools array to a collection
-            //this.collection = new ToolItemCollection(options.toolItems);
-            ////create the list view and pass in the collection
-            //this.view = new ToolListView({ collection: this.collection });
-            ////render it all once, now. Since the items don't change
-            ////while the app is running, we never need to re-render
-            //this.region.show(this.view);
+            console.log('Library Controller initialize');
+            // _.bindAll(this);
+            // this.region = SpeakPlayer.libraryRegion;
+
+            this.collection = new SongItemList();
+
+            this.view = new SongItemListView({ collection: this.collection });
+
+            // this.region.show(this.view);
 
             /*hook into App events*/
-            SpeakPlayer.vent.on(SpeakPlayer.events.songsRetrieved, function (data) {
-                console.log('SpeakPlayer.Library caught event: ' + SpeakPlayer.events.songsRetrieved);
+            SpeakPlayer.vent.on('songsRetrieved', function (data) {
+                console.log('SpeakPlayer.Library caught event: ' + 'songsRetrieved');
 
             });     
 
-            SpeakPlayer.vent.on(SpeakPlayer.events.songSelected, function (song) {
-                console.log('SpeakPlayer.Library caught event: ' + SpeakPlayer.events.songSelected);
+            SpeakPlayer.vent.on('songSelected', function (song) {
+                console.log('SpeakPlayer.Library caught event: ' + 'songSelected');
             });     
         },
 
 	    preparePlayerData: function () {
+            console.log('preparePlayerData');
 	        var data = {
 	            action: 'get_songs'
 	        };
@@ -136,7 +142,7 @@ SpeakPlayer.module("Library", function(Library, App, Backbone, Marionette, $, _)
 	        // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
 	        $.post(ajaxurl, data, function (response) {
 	            var jsonResponse = $.parseJSON(response);
-	            Library.trigger(SpeakPlayer.events.songsRetrieved, jsonResponse);
+	            Library.trigger('songsRetrieved', jsonResponse);
 	        });
 	    }
     });

@@ -6,7 +6,6 @@ SpeakPlayer.module("Library", function(Library, App, Backbone, Marionette, $, _)
     var songs; 
 
     Library.addInitializer(function(options) {
-        console.log('Library initialize');
     	Library.controller = new Controller({
     		//set any controller fields passed in from options
     	});
@@ -23,29 +22,29 @@ SpeakPlayer.module("Library", function(Library, App, Backbone, Marionette, $, _)
     var SongItemView = Backbone.Marionette.ItemView.extend({
     	model: SongItemModel,
     	template: '',
-        events: {'click': 'songItemClicked'},
+        events: {'click': songItemClicked},
         songItemClicked: function(){
             console.log('SpeakPlayer.events.songSelected' + this.model.get('name'));
             // Viewer.vent.trigger(this.model.get('eventToRaise'), this);
         }  
     });
 
-    var SongItemListView = Backbone.Marionette.CollectionView.extend({
+    var SongListView = Backbone.Marionette.CollectionView.extend({
     	ItemView: SongItemView,
     	tagName: ''
     });
 
     var Controller = Backbone.Marionette.Controller.extend({
         initialize: function (options) {
-            console.log('Library Controller initialize');
-            // _.bindAll(this);
-            // this.region = SpeakPlayer.libraryRegion;
-
-            this.collection = new SongItemList();
-
-            this.view = new SongItemListView({ collection: this.collection });
-
-            // this.region.show(this.view);
+            _.bindAll(this);
+            this.region = options.region;
+            //convert tools array to a collection
+            this.collection = new ToolItemCollection(options.toolItems);
+            //create the list view and pass in the collection
+            this.view = new ToolListView({ collection: this.collection });
+            //render it all once, now. Since the items don't change
+            //while the app is running, we never need to re-render
+            this.region.show(this.view);
 
             /*hook into App events*/
             SpeakPlayer.vent.on('songsRetrieved', function (data) {
@@ -59,7 +58,6 @@ SpeakPlayer.module("Library", function(Library, App, Backbone, Marionette, $, _)
         },
 
 	    preparePlayerData: function () {
-            console.log('preparePlayerData');
 	        var data = {
 	            action: 'get_songs'
 	        };
