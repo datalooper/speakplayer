@@ -30,23 +30,6 @@ class Speak_Player_Activator {
 	 * @since    1.0.0
 	 */
 	public static function activate() {
-        global $post_type_slug;
-
-        $args = array(
-            'labels' => array(
-                'name' => __( 'Sounds' ), // general name in menu & admin page
-                'singular_name' => __( 'Sound' )
-            ),
-            'taxonomies' => array('category'),
-            'public' => true,
-            'has_archive' => true,
-            'supports' => array( 'title', 'editor', 'thumbnail' ),
-        );
-
-        // now register the post type
-
-        register_post_type( $post_type_slug, $args );
-        print_r($post_type_slug);
-	}
+     	}
 
 }

@@ -113,11 +113,36 @@ class Speak_Player {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-speak-player-admin.php';
 
+        /**
+         * The class responsible for defining all custom metaboxes.
+         */
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-speak-player-admin-meta.php';
+
+        /**
+         * The class responsible for defining the create sound page.
+         */
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/speak-player-admin-display.php';
+
+        /**
+         * The class responsible for defining the create sound from folder page.
+         */
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/speak-player-sounds-from-folder.php';
+
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-speak-player-public.php';
+
+        /**
+         * The class responsible for creating a post from the uploader callback
+         */
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-speak-player-post-creator.php';
+
+        /**
+         * The class responsible for creating a post from the uploader callback
+         */
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-speak-player-frontend-link.php';
 
 		$this->loader = new Speak_Player_Loader();
 
@@ -150,12 +175,28 @@ class Speak_Player {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Speak_Player_Admin( $this->get_plugin_name(), $this->get_version() );
+		$plugin_admin = new Speak_Player_Admin( $this->get_plugin_name(), $this->get_version(), 'sounds' );
+        $plugin_admin_meta = new Speak_Player_Admin_Meta($this->get_plugin_name(), $this->get_version(), 'sounds');
+        $plugin_post_creator = new Speak_Player_Post_Creator();
+        $frontend_link = new Speak_Player_Frontend_Link();
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+        $this->loader->add_action( 'init', $plugin_admin, 'initialize_player' );
         $this->loader->add_action( 'admin_menu', $plugin_admin, 'create_admin_menu' );
-	}
+        $this->loader->add_action( 'admin_init', $plugin_admin_meta, 'create_custom_metaboxes' );
+        $this->loader->add_action( 'save_post', $plugin_admin_meta, 'mt_save_sound_file' );
+        $this->loader->add_action( 'save_post', $plugin_admin_meta, 'save_video_meta' );
+        $this->loader->add_action( 'save_post', $plugin_admin_meta, 'save_artist_link' );
+        $this->loader->add_action( 'wp_ajax_remove_artist_link', $plugin_admin_meta, 'remove_artist_link_callback' );
+        $this->loader->add_action('admin_notices', $plugin_post_creator, "uploaderFailed");
+        $this->loader->add_action( 'wp_ajax_createNewSoundsFromFolderSubmit', $plugin_post_creator, 'createNewSoundsFromFolderSubmit' );
+        $this->loader->add_action( 'wp_ajax_createNewSoundSubmit', $plugin_post_creator, 'createNewSoundSubmit' );
+        $this->loader->add_action( 'wp_ajax_create_post', $plugin_post_creator, 'createPost' );
+        $this->loader->add_action( 'wp_ajax_uploader_callback',$plugin_post_creator, 'uploaderCallback' );
+        $this->loader->add_action( 'wp_ajax_get_songs', $frontend_link,  'getAudioAttachments' );
+        $this->loader->add_action( 'wp_ajax_nopriv_get_songs', $frontend_link, 'getAudioAttachments' );
+    }
 
 	/**
 	 * Register all of the hooks related to the public-facing functionality
