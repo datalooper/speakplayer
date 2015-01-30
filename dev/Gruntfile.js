@@ -24,7 +24,7 @@ module.exports = function(grunt) {
       },
       dist: {
         src: [
-        'public/js/*.js'
+        'public/js/*.js','public/js/modules/*.js'
         ],
 
         dest: '../trunk/public/js/speakplayer-public.js',

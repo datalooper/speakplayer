@@ -34,14 +34,14 @@ SpeakPlayer.addInitializer(function(options) {
 
 	SpeakPlayer.isTouchDevice = is_touch_device();
 
-	//Init Modules
-	SpeakPlayer.Library.init();
-	SpeakPlayer.Playlist.init();
-	SpeakPlayer.Seekbar.init();
-	SpeakPlayer.VolumeSlider.init();
-	SpeakPlayer.Search.init();
-	SpeakPlayer.FeaturedSong.init();
+	////Init Modules
+	//SpeakPlayer.Library.init();
+	//SpeakPlayer.Playlist.init();
+	//SpeakPlayer.Seekbar.init();
+	//SpeakPlayer.VolumeSlider.init();
+	//SpeakPlayer.Search.init();
+	//SpeakPlayer.FeaturedSong.init();
 });
 
 //Start the application. Options should contain 'libraryContainer', 'playerContainer', 'playlistContainer'
-App.start(options);
+SpeakPlayer.start(options);
