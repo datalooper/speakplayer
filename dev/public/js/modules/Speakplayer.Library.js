@@ -67,8 +67,8 @@ SpeakPlayer.module("Library", function(Library, App, Backbone, Marionette, $, _)
 	        };
 
 	        // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
-	        jQuery.post(ajaxurl, data, function (response) {
-	            var jsonResponse = jQuery.parseJSON(response);
+	        $.post(ajaxurl, data, function (response) {
+	            var jsonResponse = $.parseJSON(response);
                 console.log('response ' + JSON.stringify(jsonResponse));
 	            Library.trigger('songsRetrieved', jsonResponse);
 	        });
