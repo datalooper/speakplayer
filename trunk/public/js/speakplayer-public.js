@@ -64,11 +64,42 @@ SpeakPlayer.addInitializer(function(options) {
 
 });
 
+//DEBUG
+// SpeakPlayer.vent.on('all', function (evt, model) {
+//     console.log('DEBUG: Event Caught: ' + evt);
+//     if (model) {
+//        console.dir(model);
+//     }
+// });
+
 //Start the application. Options should contain 'libraryContainer', 'playerContainer', 'playlistContainer'
 var options = {
 	//this object will get passed to initialization events
 };
-;/*
+;/**
+ * Created by vcimo5 on 9/30/14.
+ */
+//defines song model
+
+SpeakPlayer.Song = function(obj) {
+    this.isFeatured = false;
+    this.isPlaying = false,
+    this.isLoaded = false,
+    this.trackInfo = '',
+    this.artistName = 'artist',
+    this.albumName = 'album',
+    this.songName = 'track',
+    this.songUrl = '',
+    this.releaseDate = '',
+    this.albumArtUrl = '',
+    this.id = '-1',
+    this.genre = '',
+    this.artistLink = ''
+
+
+    // IF AN OBJECT WAS PASSED THEN INITIALISE PROPERTIES FROM THAT OBJECT
+    for (var prop in obj) this[prop] = obj[prop];
+};/*
     Sample Module definition for Library module
 */
 SpeakPlayer.module("FeaturedSound", function(Library, App, Backbone, Marionette, $, _){
@@ -79,6 +110,7 @@ SpeakPlayer.module("FeaturedSound", function(Library, App, Backbone, Marionette,
 SpeakPlayer.module("Library", function(Library, App, Backbone, Marionette, $, _){
     var featuredSong;
     var songs; 
+    var region;
 
     Library.addInitializer(function(options) {
         console.log('Library initialize');
@@ -87,8 +119,9 @@ SpeakPlayer.module("Library", function(Library, App, Backbone, Marionette, $, _)
     	});
 
         //TODO: Update this to have 'featured' by the song object.
-        this.featuredSong = libraryContainer.find('#featured');
-        this.preparePlayerData();
+        // this.featuredSong = '';
+        // this.region = SpeakPlayer.libraryRegion;
+        Library.controller.preparePlayerData();
     });
 
     //Declare Song model and Song Collection
@@ -97,7 +130,7 @@ SpeakPlayer.module("Library", function(Library, App, Backbone, Marionette, $, _)
 
     var SongItemView = Backbone.Marionette.ItemView.extend({
     	model: SongItemModel,
-    	template: '',
+    	// template: '',
         events: {'click': 'songItemClicked'},
         songItemClicked: function(){
             console.log('SpeakPlayer.events.songSelected' + this.model.get('name'));
@@ -107,7 +140,7 @@ SpeakPlayer.module("Library", function(Library, App, Backbone, Marionette, $, _)
 
     var SongItemListView = Backbone.Marionette.CollectionView.extend({
     	ItemView: SongItemView,
-    	tagName: ''
+    	// tagName: ''
     });
 
     var Controller = Backbone.Marionette.Controller.extend({
@@ -125,7 +158,7 @@ SpeakPlayer.module("Library", function(Library, App, Backbone, Marionette, $, _)
             /*hook into App events*/
             SpeakPlayer.vent.on('songsRetrieved', function (data) {
                 console.log('SpeakPlayer.Library caught event: ' + 'songsRetrieved');
-
+                Library.controller.buildSongList(data);
             });     
 
             SpeakPlayer.vent.on('songSelected', function (song) {
@@ -142,9 +175,28 @@ SpeakPlayer.module("Library", function(Library, App, Backbone, Marionette, $, _)
 	        // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
 	        $.post(ajaxurl, data, function (response) {
 	            var jsonResponse = $.parseJSON(response);
-	            Library.trigger('songsRetrieved', jsonResponse);
+                console.log('response ' + JSON.stringify(jsonResponse));
+	            SpeakPlayer.vent.trigger('songsRetrieved', jsonResponse);
 	        });
-	    }
+	    },
+
+        buildSongList: function (obj) {
+            $.each(obj, function (key, song) {
+                var songObj = new SpeakPlayer.Song(song);
+
+                if(songObj.isFeatured && Library.featuredSong == null){
+                    Library.featuredSong = songObj;
+                } else if(window.location.hash.substring(1) == songObj.id){
+                    Library.featuredSong = songObj;
+                }
+
+                // if($.inArray(songObj.genre, SpeakPlayer.Player.genres) == -1){
+                //     SpeakPlayer.Player.genres.push(songObj.genre);
+                // }
+
+                // SpeakPlayer.Player.songs.push(songObj);
+            });
+        }
     });
 
 
