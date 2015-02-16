@@ -27,8 +27,8 @@ module.exports = function(grunt) {
         'public/js/*.js','public/js/backbone.marionette.min.js','public/js/modules/Speakplayer.js', 'public/js/modules/*.js'
         ],
 
-        dest: '../trunk/public/js/speakplayer-public.js',
-      },
+        dest: '../trunk/public/js/speak_sound_library-public.js'
+      }
 
     },
     autoprefixer: {

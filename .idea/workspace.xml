@@ -2,6 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f0e75bff-f4a6-41ad-ac43-599f16dcb4a3" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/trunk/public/js/modules/Speakplayer.Library.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/trunk/public/js/modules/Speakplayer.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/trunk/public/class-speak-sound-library-public.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/trunk/public/js/eventStrings.json" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/trunk/public/js/speakplayer-public.js" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dev/Gruntfile.js" afterPath="$PROJECT_DIR$/dev/Gruntfile.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/trunk/includes/class-speak-sound-library.php" afterPath="$PROJECT_DIR$/trunk/includes/class-speak-sound-library.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="speakplayer.iws" />
@@ -37,11 +44,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="init.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="init.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dev/public/js/init.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.17874876" vertical-offset="0" max-vertical-offset="1007">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="270">
               <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="class-speak-sound-library.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/trunk/includes/class-speak-sound-library.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-18.125" vertical-offset="1425" max-vertical-offset="3930">
+              <caret line="135" column="8" selection-start-line="135" selection-start-column="8" selection-end-line="135" selection-end-column="8" />
               <folding />
             </state>
           </provider>
@@ -57,12 +74,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="speakplayer-public.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/trunk/public/js/speakplayer-public.js">
+      <file leaf-file-name="Gruntfile.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/dev/Gruntfile.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4635">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.38109756" vertical-offset="0" max-vertical-offset="1230">
+              <caret line="25" column="14" selection-start-line="25" selection-start-column="14" selection-end-line="25" selection-end-column="14" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="class-speak-sound-library-public.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/trunk/public/class-speak-sound-library-public.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-19.556963" vertical-offset="0" max-vertical-offset="1710">
+              <caret line="103" column="94" selection-start-line="103" selection-start-column="94" selection-end-line="103" selection-end-column="94" />
+              <folding>
+                <element signature="e#7#215#0#PHP" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -138,6 +167,9 @@
         <option value="$PROJECT_DIR$/trunk/speak-sound-library.php" />
         <option value="$PROJECT_DIR$/trunk/README.txt" />
         <option value="$PROJECT_DIR$/dev/public/js/modules/Speakplayer.js" />
+        <option value="$PROJECT_DIR$/trunk/public/class-speak-sound-library-public.php" />
+        <option value="$PROJECT_DIR$/trunk/includes/class-speak-sound-library.php" />
+        <option value="$PROJECT_DIR$/dev/Gruntfile.js" />
       </list>
     </option>
   </component>
@@ -203,6 +235,24 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="speakplayer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="speakplayer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trunk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="public" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -635,18 +685,36 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/trunk/public/js/speakplayer-public.js">
+    <entry file="file://$PROJECT_DIR$/dev/public/js/init.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4635">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="270">
+          <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dev/public/js/init.js">
+    <entry file="file://$PROJECT_DIR$/trunk/public/class-speak-sound-library-public.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.17874876" vertical-offset="0" max-vertical-offset="1007">
-          <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+        <state vertical-scroll-proportion="-19.556963" vertical-offset="0" max-vertical-offset="1710">
+          <caret line="103" column="94" selection-start-line="103" selection-start-column="94" selection-end-line="103" selection-end-column="94" />
+          <folding>
+            <element signature="e#7#215#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trunk/includes/class-speak-sound-library.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-18.125" vertical-offset="1425" max-vertical-offset="3930">
+          <caret line="135" column="8" selection-start-line="135" selection-start-column="8" selection-end-line="135" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dev/Gruntfile.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.38109756" vertical-offset="0" max-vertical-offset="1230">
+          <caret line="25" column="14" selection-start-line="25" selection-start-column="14" selection-end-line="25" selection-end-column="14" />
           <folding />
         </state>
       </provider>
