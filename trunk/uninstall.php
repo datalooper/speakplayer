@@ -22,7 +22,7 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    Speak_Player
+ * @package    Speak_Sound_Library
  */
 
 // If uninstall not called from WordPress, then exit.

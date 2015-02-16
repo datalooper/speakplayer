@@ -6,8 +6,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    Speak_Player
- * @subpackage Speak_Player/includes
+ * @package    Speak_Sound_Library
+ * @subpackage Speak_Sound_Library/includes
  */
 
 /**
@@ -17,11 +17,11 @@
  * the plugin, and register them with the WordPress API. Call the
  * run function to execute the list of actions and filters.
  *
- * @package    Speak_Player
- * @subpackage Speak_Player/includes
+ * @package    Speak_Sound_Library
+ * @subpackage Speak_Sound_Library/includes
  * @author     Your Name <email@example.com>
  */
-class Speak_Player_Loader {
+class Speak_Sound_Library_Loader {
 
 	/**
 	 * The array of actions registered with WordPress.

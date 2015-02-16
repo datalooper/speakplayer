@@ -6,8 +6,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    Speak_Player
- * @subpackage Speak_Player/admin
+ * @package    Speak_Sound_Library
+ * @subpackage Speak_Sound_Library/admin
  */
 
 /**
@@ -16,11 +16,11 @@
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the dashboard-specific stylesheet and JavaScript.
  *
- * @package    Speak_Player
- * @subpackage Speak_Player/admin
+ * @package    Speak_Sound_Library
+ * @subpackage Speak_Sound_Library/admin
  * @author     Your Name <email@example.com>
  */
-class Speak_Player_Admin {
+class Speak_Sound_Library_Admin {
 
 
     private $custom_post_name;
@@ -68,15 +68,15 @@ class Speak_Player_Admin {
 		 * This function is provided for demonstration purposes only.
 		 *
 		 * An instance of this class should be passed to the run() function
-		 * defined in Speak_Player_Loader as all of the hooks are defined
+		 * defined in Speak_Sound_Library_Loader as all of the hooks are defined
 		 * in that particular class.
 		 *
-		 * The Speak_Player_Loader will then create the relationship
+		 * The Speak_Sound_Library_Loader will then create the relationship
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/speak-player-admin.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/speak-sound-library-admin.css', array(), $this->version, 'all' );
 
 	}
 
@@ -91,15 +91,15 @@ class Speak_Player_Admin {
 		 * This function is provided for demonstration purposes only.
 		 *
 		 * An instance of this class should be passed to the run() function
-		 * defined in Speak_Player_Loader as all of the hooks are defined
+		 * defined in Speak_Sound_Library_Loader as all of the hooks are defined
 		 * in that particular class.
 		 *
-		 * The Speak_Player_Loader will then create the relationship
+		 * The Speak_Sound_Library_Loader will then create the relationship
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
         wp_enqueue_media();
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/speak-player-admin.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/speak-sound-library-admin.js', array( 'jquery' ), $this->version, false );
         // in javascript, object properties are accessed as ajax_object.ajax_url, ajax_object.we_value
         wp_localize_script( $this->plugin_name, 'ajax_object',
             array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'attachment' => "" ) );

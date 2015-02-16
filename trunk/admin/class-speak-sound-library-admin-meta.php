@@ -5,7 +5,7 @@
  * Date: 1/29/15
  * Time: 4:25 PM
  */
-class Speak_Player_Admin_Meta
+class Speak_Sound_Library_Admin_Meta
 {
     private $custom_post_name;
 

@@ -8,8 +8,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    Speak_Player
- * @subpackage Speak_Player/admin/partials
+ * @package    Speak_Sound_Library
+ * @subpackage Speak_Sound_Library/admin/partials
  */
 
     //constructs admin page
@@ -50,7 +50,7 @@ echo '<div class="wrap">';
 
 // header
 
-echo "<h2>" . __( 'Speak Player', 'menu-test' ) . "</h2>";
+echo "<h2>" . __( 'Speak Sound Library', 'menu-test' ) . "</h2>";
 
 // settings form
 

@@ -6,7 +6,7 @@
  * Time: 7:21 PM
  */
 
-class Speak_Player_Frontend_Link {
+class Speak_Sound_Library_Frontend_Link {
     private $custom_post_name;
 
     public function __construct( $custom_post_name ) {
@@ -58,7 +58,27 @@ class Speak_Player_Frontend_Link {
 
     } // end add_ajax_library
     function getSongs(){
+
+        $artistFilter = $_POST['artistFilter'];
+        $genreFilter = $_POST['genreFilter'];
+        $albumFilter = $_POST['albumFilter'];
+
         $args = array( 'post_type' => $this->custom_post_name, 'numberposts' => -1 );
+
+
+        if($genreFilter != ''){
+            $args['meta_key'] = 'genre';
+            $args['meta_value'] = $genreFilter;
+        }
+        if($albumFilter != ''){
+            $args['meta_key'] = 'album';
+            $args['meta_value'] = $albumFilter;
+        }
+        if($artistFilter != ''){
+            $args['meta_key'] = 'artist';
+            $args['meta_value'] = $artistFilter;
+        }
+
         $postArray = get_posts($args);
         $i = 0;
         $songs = array();

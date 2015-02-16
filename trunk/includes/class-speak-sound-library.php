@@ -9,8 +9,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    Speak_Player
- * @subpackage Speak_Player/includes
+ * @package    Speak_Sound_Library
+ * @subpackage Speak_Sound_Library/includes
  */
 
 /**
@@ -23,11 +23,11 @@
  * version of the plugin.
  *
  * @since      1.0.0
- * @package    Speak_Player
- * @subpackage Speak_Player/includes
+ * @package    Speak_Sound_Library
+ * @subpackage Speak_Sound_Library/includes
  * @author     Your Name <email@example.com>
  */
-class Speak_Player {
+class Speak_Sound_Library {
 
 	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
@@ -35,7 +35,7 @@ class Speak_Player {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      Speak_Player_Loader    $loader    Maintains and registers all hooks for the plugin.
+	 * @var      Speak_Sound_Library_Loader    $loader    Maintains and registers all hooks for the plugin.
 	 */
 	protected $loader;
 
@@ -69,7 +69,7 @@ class Speak_Player {
 	 */
 	public function __construct() {
 
-		$this->plugin_name = 'speak-player';
+		$this->plugin_name = 'speak-sound-library';
 		$this->version = '1.0.0';
 
 		$this->load_dependencies();
@@ -84,10 +84,10 @@ class Speak_Player {
 	 *
 	 * Include the following files that make up the plugin:
 	 *
-	 * - Speak_Player_Loader. Orchestrates the hooks of the plugin.
-	 * - Speak_Player_i18n. Defines internationalization functionality.
-	 * - Speak_Player_Admin. Defines all hooks for the dashboard.
-	 * - Speak_Player_Public. Defines all hooks for the public side of the site.
+	 * - Speak_Sound_Library_Loader. Orchestrates the hooks of the plugin.
+	 * - Speak_Sound_Library_i18n. Defines internationalization functionality.
+	 * - Speak_Sound_Library_Admin. Defines all hooks for the dashboard.
+	 * - Speak_Sound_Library_Public. Defines all hooks for the public side of the site.
 	 *
 	 * Create an instance of the loader which will be used to register the hooks
 	 * with WordPress.
@@ -101,58 +101,58 @@ class Speak_Player {
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-speak-player-loader.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-speak-sound-library-loader.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality
 		 * of the plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-speak-player-i18n.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-speak-sound-library-i18n.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the Dashboard.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-speak-player-admin.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-speak-sound-library-admin.php';
 
         /**
          * The class responsible for defining all custom metaboxes.
          */
-        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-speak-player-admin-meta.php';
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-speak-sound-library-admin-meta.php';
 
         /**
          * The class responsible for defining the create sound page.
          */
-        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/speak-player-admin-display.php';
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/speak-sound-library-admin-display.php';
 
         /**
          * The class responsible for defining the create sound from folder page.
          */
-        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/speak-player-sounds-from-folder.php';
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/speak-sound-library-sounds-from-folder.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-speak-player-public.php';
+		//require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-speak-sound-library-public.php';
 
         /**
          * The class responsible for creating a post from the uploader callback
          */
-        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-speak-player-post-creator.php';
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-speak-sound-library-post-creator.php';
 
         /**
          * The class responsible for creating a post from the uploader callback
          */
-        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-speak-player-frontend-link.php';
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-speak-sound-library-frontend-link.php';
 
-		$this->loader = new Speak_Player_Loader();
+		$this->loader = new Speak_Sound_Library_Loader();
 
 	}
 
 	/**
 	 * Define the locale for this plugin for internationalization.
 	 *
-	 * Uses the Speak_Player_i18n class in order to set the domain and to register the hook
+	 * Uses the Speak_Sound_Library_i18n class in order to set the domain and to register the hook
 	 * with WordPress.
 	 *
 	 * @since    1.0.0
@@ -160,7 +160,7 @@ class Speak_Player {
 	 */
 	private function set_locale() {
 
-		$plugin_i18n = new Speak_Player_i18n();
+		$plugin_i18n = new Speak_Sound_Library_i18n();
 		$plugin_i18n->set_domain( $this->get_plugin_name() );
 
 		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
@@ -176,10 +176,10 @@ class Speak_Player {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Speak_Player_Admin( $this->get_plugin_name(), $this->get_version(), $this->custom_post_type );
-        $plugin_admin_meta = new Speak_Player_Admin_Meta($this->get_plugin_name(), $this->get_version(), $this->custom_post_type);
-        $plugin_post_creator = new Speak_Player_Post_Creator($this->custom_post_type);
-        $frontend_link = new Speak_Player_Frontend_Link($this->custom_post_type);
+		$plugin_admin = new Speak_Sound_Library_Admin( $this->get_plugin_name(), $this->get_version(), $this->custom_post_type );
+        $plugin_admin_meta = new Speak_Sound_Library_Admin_Meta($this->get_plugin_name(), $this->get_version(), $this->custom_post_type);
+        $plugin_post_creator = new Speak_Sound_Library_Post_Creator($this->custom_post_type);
+        $frontend_link = new Speak_Sound_Library_Frontend_Link($this->custom_post_type);
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
@@ -217,10 +217,10 @@ class Speak_Player {
 	 */
 	private function define_public_hooks() {
 
-		$plugin_public = new Speak_Player_Public( $this->get_plugin_name(), $this->get_version() );
+		// $plugin_public = new Speak_Sound_Library_Public( $this->get_plugin_name(), $this->get_version() );
 
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+		// $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
+		// $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
 	}
 
@@ -248,7 +248,7 @@ class Speak_Player {
 	 * The reference to the class that orchestrates the hooks with the plugin.
 	 *
 	 * @since     1.0.0
-	 * @return    Speak_Player_Loader    Orchestrates the hooks of the plugin.
+	 * @return    Speak_Sound_Library_Loader    Orchestrates the hooks of the plugin.
 	 */
 	public function get_loader() {
 		return $this->loader;

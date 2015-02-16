@@ -9,8 +9,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    Speak_Player
- * @subpackage Speak_Player/includes
+ * @package    Speak_Sound_Library
+ * @subpackage Speak_Sound_Library/includes
  */
 
 /**
@@ -20,11 +20,11 @@
  * so that it is ready for translation.
  *
  * @since      1.0.0
- * @package    Speak_Player
- * @subpackage Speak_Player/includes
+ * @package    Speak_Sound_Library
+ * @subpackage Speak_Sound_Library/includes
  * @author     Your Name <email@example.com>
  */
-class Speak_Player_i18n {
+class Speak_Sound_Library_i18n {
 
 	/**
 	 * The domain specified for this plugin.

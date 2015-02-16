@@ -6,7 +6,7 @@
  * Time: 5:38 PM
  */
 
-class Speak_Player_Post_Creator {
+class Speak_Sound_Library_Post_Creator {
 
     public $attachment;
     public $custom_post_type;

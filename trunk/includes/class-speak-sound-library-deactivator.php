@@ -6,8 +6,8 @@
  * @link       http://example.com
  * @since      1.0.0
  *
- * @package    Speak_Player
- * @subpackage Speak_Player/includes
+ * @package    Speak_Sound_Library
+ * @subpackage Speak_Sound_Library/includes
  */
 
 /**
@@ -16,11 +16,11 @@
  * This class defines all code necessary to run during the plugin's deactivation.
  *
  * @since      1.0.0
- * @package    Speak_Player
- * @subpackage Speak_Player/includes
+ * @package    Speak_Sound_Library
+ * @subpackage Speak_Sound_Library/includes
  * @author     Your Name <email@example.com>
  */
-class Speak_Player_Deactivator {
+class Speak_Sound_Library_Deactivator {
 
 	/**
 	 * Short Description. (use period)

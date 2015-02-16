@@ -40,7 +40,6 @@ jQuery(document).ready(function($){
         };
         // We can also pass the url value separately from ajaxurl for front end AJAX implementations
         jQuery.post(ajax_object.ajax_url, data, function(response) {
-            console.log(response);
             if(response != "0"){
                 errorSelector.fadeOut();
                 $(".updated").html("<p>Sound created! Manage Here</p><a href='"+response+ "'>" + response+"</a>" );
