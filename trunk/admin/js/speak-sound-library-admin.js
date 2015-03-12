@@ -68,9 +68,9 @@ jQuery(document).ready(function($){
         console.log(ajax_object.ajax_url);
         jQuery.post(ajax_object.ajax_url, data, function(response) {
             console.log(response);
-            if(response != "0"){
+            if(response.length > 0){
                 errorSelector.fadeOut();
-                $(".updated").html("<p>Sounds created! Manage Here</p>").fadeIn();
+                $(".updated").html("<p>Sounds created! Manage <a href="+response+">Here</a></p>").fadeIn();
                 clearForm();
             }
             else{

@@ -24,7 +24,7 @@ module.exports = function(grunt) {
       },
       dist: {
         src: [
-        'public/js/*.js','public/js/backbone.marionette.min.js','public/js/modules/Speakplayer.js', 'public/js/modules/*.js'
+        'public/js/backbone.marionette.min.js','public/js/app/Speakplayer.js', 'public/js/entities/SpeakPlayer.Entities.js', 'public/js/modules/*.js'
         ],
 
         dest: '../trunk/public/js/speak_sound_library-public.js'
@@ -53,10 +53,10 @@ module.exports = function(grunt) {
         tasks: ['shell']
     },
       concat: {
-        files: ['public/js/*.js','public/js/modules/*.js'],
+        files: ['public/js/modules/SpeakPlayer.js','public/js/modules/SpeakPlayer.Entities.js','public/js/*.js','public/js/modules/*.js'],
         tasks: 'compileJS',
         options: {
-          spawn: false,
+          spawn: false
         }
       }
     }

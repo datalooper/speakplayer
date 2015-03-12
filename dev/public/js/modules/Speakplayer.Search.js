@@ -1,6 +1,6 @@
 /*
     Sample Module definition for Library module
 */
-SpeakPlayer.module("Search", function(Library, App, Backbone, Marionette, $, _){
+SpeakPlayer.module("Search", function(Search, App, Backbone, Marionette, $, _){
     
 });

@@ -1,6 +1,6 @@
 /*
     Sample Module definition for Library module
 */
-SpeakPlayer.module("FeaturedSound", function(Library, App, Backbone, Marionette, $, _){
+SpeakPlayer.module("FeaturedSound", function(FeaturedSound, App, Backbone, Marionette, $, _){
     
 });

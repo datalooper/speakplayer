@@ -2,95 +2,160 @@
     Sample Module definition for Library module
 */
 SpeakPlayer.module("Library", function(Library, App, Backbone, Marionette, $, _){
-    var featuredSong;
-    var songs; 
-    var region;
 
     Library.addInitializer(function(options) {
         console.log('Library initialize');
-    	Library.controller = new Controller({
-    		//set any controller fields passed in from options
-    	});
+    	Library.controller = new Controller();
 
-        //TODO: Update this to have 'featured' by the song object.
-        // this.featuredSong = '';
-        // this.region = SpeakPlayer.libraryRegion;
-        Library.controller.preparePlayerData();
+
+        var songItemListView = new SongItemListView({collection:SpeakPlayer.channel.request('getSongList')});
+        var libraryLayout = new LibraryLayout();
+
+        SpeakPlayer.libraryRegion.show(libraryLayout);
+        libraryLayout.songsRegion.show(songItemListView);
     });
 
-    //Declare Song model and Song Collection
-    var SongItemModel = Backbone.Model.extend({});
-    var SongItemList = Backbone.Collection.extend({});
+    //*********** Declaring Models and Collections ***********//
+
+
+
+    //*********** Declaring Views ***********//
+
+    var LibraryLayout = Backbone.Marionette.LayoutView.extend({
+        template: Handlebars.templates['libraryLayout.hbs'],
+        regions: {
+            controlRegion : '#controlRegion',
+            songsRegion : '#songRegion'
+        },
+        events:{
+            'click .playAll' : 'playAll'
+        },
+        playAll : function(){
+            SpeakPlayer.channel.trigger('playAll', this.model);
+        }
+
+    });
+
 
     var SongItemView = Backbone.Marionette.ItemView.extend({
-    	model: SongItemModel,
-    	// template: '',
-        events: {'click': 'songItemClicked'},
-        songItemClicked: function(){
-            console.log('SpeakPlayer.events.songSelected' + this.model.get('name'));
-            // Viewer.vent.trigger(this.model.get('eventToRaise'), this);
-        }  
+        template: Handlebars.templates['songItemView.hbs'],
+        tagName: 'li',
+
+        //Define UI Components
+        ui: {
+            playNow : ".playNow",
+            pause : ".pause",
+            removeFromPlaylist : ".removeFromPlaylist",
+            likeTrack : '.likeTrack',
+            addToPlaylist : '.addToPlaylist'
+        },
+        onShow : function(){
+
+            //TODO maybe make this an addClass('hide')
+            this.ui.pause.hide();
+            this.ui.removeFromPlaylist.hide();
+        },
+        initialize: function(){
+            this.currentSong = SpeakPlayer.channel.request('currentSong');
+            this.listenTo(this.currentSong, "change:isPlaying", this.togglePlayPause);
+            this.listenTo(SpeakPlayer.channel,"removeFromPlaylist", this.removeFromPlaylist);
+        },
+        //Listens to Song Change events
+        modelEvents:{
+            "change:isLiked" : function(){
+                console.log("Song Liked Set To", this.model.get("isLiked"));
+            }
+        },
+        events: {
+            'click @ui.playNow': function(e){
+                e.preventDefault();
+                if(SpeakPlayer.channel.request('isCurrentSong', this.model)){
+                    SpeakPlayer.channel.trigger('resume');
+                } else{
+                    console.log("library setting song");
+                    SpeakPlayer.channel.trigger('setSong', this.model);
+                    this.toggleAddRemove(true);
+                }
+            },
+
+            'click @ui.pause' : function(e){
+                e.preventDefault();
+                SpeakPlayer.channel.trigger('pause');
+            },
+
+            'click @ui.removeFromPlaylist' : function(e){
+                e.preventDefault();
+                SpeakPlayer.channel.trigger('removeFromPlaylist', this.model);
+                this.toggleAddRemove(false);
+            },
+
+            'click @ui.likeTrack' : function(e){
+                e.preventDefault();
+                SpeakPlayer.channel.trigger('likeTrack', this.model);
+            },
+
+            'click @ui.addToPlaylist' : function(e){
+                e.preventDefault();
+                SpeakPlayer.channel.trigger('addToPlaylist', this.model);
+                this.toggleAddRemove(true);
+
+            }
+        },
+        removeFromPlaylist : function(song){
+          if(this.model === song){
+              this.toggleAddRemove(false);
+          }
+        },
+        togglePlayPause : function(currentSong){
+           if(currentSong.get('song') === this.model) {
+               var playing = currentSong.get("isPlaying");
+               this.ui.playNow.toggle(!playing);
+               this.ui.pause.toggle(playing);
+           }
+        },
+        toggleAddRemove : function(added){
+            this.ui.addToPlaylist.toggle(!added);
+            this.ui.removeFromPlaylist.toggle(added);
+        }
     });
 
     var SongItemListView = Backbone.Marionette.CollectionView.extend({
-    	ItemView: SongItemView,
-    	// tagName: ''
+        childView: SongItemView,
+        tagName:'ul'
     });
+
+
+
+    //*********** Controller and Logic ***********//
 
     var Controller = Backbone.Marionette.Controller.extend({
         initialize: function (options) {
-            console.log('Library Controller initialize');
-            // _.bindAll(this);
-            // this.region = SpeakPlayer.libraryRegion;
 
-            this.collection = new SongItemList();
+            ///* Song Item View Events */
+            //
+            //SpeakPlayer.channel.on('playSong', function (song) {
+            //    console.log('SpeakPlayer.Library caught event: ' + 'playSong');
+            //});
+            //
+            //SpeakPlayer.channel.on('pauseSong', function (song) {
+            //
+            //    console.log('SpeakPlayer.Library caught event: ' + 'pauseSong');
+            //});
+            //
+            //SpeakPlayer.channel.on('addToPlaylist', function (song) {
+            //    console.log('SpeakPlayer.Library caught event: ' + 'addToPlaylist');
+            //});
+            //
+            //SpeakPlayer.channel.on('removeFromPlaylist', function (song) {
+            //    console.log('SpeakPlayer.Library caught event: ' + 'removeFromPlaylist');
+            //});
+            //
+            //SpeakPlayer.channel.on('likeTrack', function (song) {
+            //    console.log('SpeakPlayer.Library caught event: ' + 'likeTrack');
+            //});
 
-            this.view = new SongItemListView({ collection: this.collection });
 
-            // this.region.show(this.view);
-
-            /*hook into App events*/
-            SpeakPlayer.vent.on('songsRetrieved', function (data) {
-                console.log('SpeakPlayer.Library caught event: ' + 'songsRetrieved');
-                Library.controller.buildSongList(data);
-            });     
-
-            SpeakPlayer.vent.on('songSelected', function (song) {
-                console.log('SpeakPlayer.Library caught event: ' + 'songSelected');
-            });     
-        },
-
-	    preparePlayerData: function () {
-            console.log('preparePlayerData');
-	        var data = {
-	            action: 'get_songs'
-	        };
-
-	        // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
-	        $.post(ajaxurl, data, function (response) {
-	            var jsonResponse = $.parseJSON(response);
-                console.log('response ' + JSON.stringify(jsonResponse));
-	            SpeakPlayer.vent.trigger('songsRetrieved', jsonResponse);
-	        });
-	    },
-
-        buildSongList: function (obj) {
-            $.each(obj, function (key, song) {
-                var songObj = new SpeakPlayer.Song(song);
-
-                if(songObj.isFeatured && Library.featuredSong == null){
-                    Library.featuredSong = songObj;
-                } else if(window.location.hash.substring(1) == songObj.id){
-                    Library.featuredSong = songObj;
-                }
-
-                // if($.inArray(songObj.genre, SpeakPlayer.Player.genres) == -1){
-                //     SpeakPlayer.Player.genres.push(songObj.genre);
-                // }
-
-                // SpeakPlayer.Player.songs.push(songObj);
-            });
-        }
+	    }
     });
 
 

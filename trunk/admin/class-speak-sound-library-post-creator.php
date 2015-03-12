@@ -50,39 +50,45 @@ class Speak_Sound_Library_Post_Creator {
 
     function createNewSoundsFromFolderSubmit(){
 
-        //get value of folder url
-        $soundsUrl = strval($_POST['soundsUrl']);
-        $soundsUrlParsed = parse_url($soundsUrl);
+        try {
+            //get value of folder url
 
-        //check for trailing slash
-        if(substr($soundsUrlParsed['path'], -1) == '/') {
-            $localPath = $_SERVER['DOCUMENT_ROOT'].$soundsUrlParsed['path'];
-        } else{
-            $localPath = $_SERVER['DOCUMENT_ROOT'].$soundsUrlParsed['path']."/";
-        }
+            $soundsUrl = strval($_POST['soundsUrl']);
+            $soundsUrlParsed = parse_url($soundsUrl);
 
-        $dir  = new RecursiveDirectoryIterator($localPath, RecursiveDirectoryIterator::SKIP_DOTS);
-        $files = new RecursiveIteratorIterator($dir, RecursiveIteratorIterator::SELF_FIRST);
-
-        foreach ($files as $file) {
-            if($file->getExtension() == "mp3"){
-                echo $file;
-                $friendlyPath = $this->renameFriendly($file->getPath()."/", $file->getFilename());
-                //Valid file found, add to wordpress attachment database
-                // Prepare an array of post data for the attachment.
-                $attachment = array(
-                    'guid'           => $friendlyPath,
-                    'post_mime_type' => 'audio/mpeg',
-                    'post_title'     => $file->getFilename(),
-                    'post_content'   => '',
-                    'post_status'    => 'inherit'
-                );
-                $attachment_id = wp_insert_attachment( $attachment, $friendlyPath);
-                $meta = wp_generate_attachment_metadata( $attachment_id, $friendlyPath );
-                $this->createPostFromFolder($attachment_id, $meta);
-
+            //check for trailing slash
+            if (substr($soundsUrlParsed['path'], -1) == '/') {
+                $localPath = $_SERVER['DOCUMENT_ROOT'] . $soundsUrlParsed['path'];
+            } else {
+                $localPath = $_SERVER['DOCUMENT_ROOT'] . $soundsUrlParsed['path'] . "/";
             }
+
+            $dir = new RecursiveDirectoryIterator($localPath, RecursiveDirectoryIterator::SKIP_DOTS);
+            $files = new RecursiveIteratorIterator($dir, RecursiveIteratorIterator::SELF_FIRST);
+
+            foreach ($files as $file) {
+                if ($file->getExtension() == "mp3") {
+                    $friendlyPath = $this->renameFriendly($file->getPath() . "/", $file->getFilename());
+                    //Valid file found, add to wordpress attachment database
+                    // Prepare an array of post data for the attachment.
+                    $attachment = array(
+                        'post_mime_type' => 'audio/mpeg',
+                        'post_title' => $file->getFilename(),
+                        'post_content' => '',
+                        'post_status' => 'inherit'
+                    );
+                    $attachment_id = wp_insert_attachment($attachment, $friendlyPath);
+                    $meta = wp_generate_attachment_metadata($attachment_id, $friendlyPath);
+                    $this->createPostFromFolder($attachment_id, $meta);
+
+                }
+            }
+        } catch(Exception $e) {
+            error_log($e);
+            die();
         }
+        echo admin_url( "edit.php?post_type=sounds" );
+
         die();
     }
     function createPostFromFolder($attachment_id, $meta){
@@ -96,7 +102,6 @@ class Speak_Sound_Library_Post_Creator {
                     'post_type'     => $this->custom_post_type,
                     'post_author'   => 1,
                 );
-
                 // Insert the post into the database
                 $post_id = wp_insert_post( $new_post );
                 if($post_id != 0){
@@ -112,14 +117,15 @@ class Speak_Sound_Library_Post_Creator {
                     add_post_meta($post_id, 'artist', $meta['artist']);
                     add_post_meta($post_id, 'album', $meta['album']);
                     add_post_meta($post_id, 'genre', $meta['genre']);
+                    add_post_meta($post_id, 'length', $meta['length']);
 
 
                     //sound file url
-                    add_post_meta($post_id, 'wp_custom_attachment', $attachment->guid);
-                    update_post_meta($post_id, 'wp_custom_attachment', $attachment->guid);
+                    add_post_meta($post_id, 'wp_custom_attachment', wp_get_attachment_url( $attachment->ID ));
+                    update_post_meta($post_id, 'wp_custom_attachment', wp_get_attachment_url( $attachment->ID ));
 
                     wp_set_object_terms( $post_id, $meta['genre'], 'genres' );
-                    echo get_edit_post_link( $post_id );
+
 
 
             }

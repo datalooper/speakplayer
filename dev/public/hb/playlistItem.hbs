@@ -1,0 +1,53 @@
+<div  data-song-id={{id}} class='song cf'>
+<div class='controls'>
+    <a class="removeFromPlaylist" href="#" title="Remove From Playlist">
+        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="18.872px" height="25px" viewBox="0 0 18.872 25" enable-background="new 0 0 18.872 25" xml:space="preserve">
+                    <g>
+                        <path d="M0,0.993c0-0.55,0.363-0.734,0.807-0.409L12.75,9.336c0.442,0.325,0.442,0.857,0,1.183L0.807,19.271
+                            C0.363,19.598,0,19.412,0,18.861V0.993z"/>
+                    </g>
+                    <g>
+                        <path d="M11.357,23.869l-1.167-1.167l2.775-2.776l-2.777-2.777l1.168-1.167l2.777,2.777l2.766-2.767l1.167,1.167
+                            L15.3,19.926l2.775,2.775l-1.168,1.168l-2.775-2.776L11.357,23.869z"/>
+                    </g>
+                    </svg>
+    </a>
+    <a class="pause" href="#" title="Pause"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="23.379px" height="27px" viewBox="0 0 23.379 27" enable-background="new 0 0 23.379 27" xml:space="preserve"><rect x="14.678" y="-0.003"  width="6.701" height="27.007"/><rect x="2" y="-0.003" width="6.701" height="27.007"/></svg>
+    </a>
+
+
+    <a class='play' href='#' title="Play">
+        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16.983px" height="25px" viewBox="0 0 16.983 25" enable-background="new 0 0 16.983 25" xml:space="preserve">
+                    <g>
+                        <path d="M0,1c0-0.55,0.363-0.734,0.807-0.409l15.37,11.264c0.443,0.325,0.443,0.857,0,1.183L0.807,24.303
+                            C0.363,24.628,0,24.443,0,23.894V1z"/>
+                    </g>
+                </svg>
+
+    </a><a class='likeTrack' href='#' title="Like Track">
+    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="18.872px" height="25px" viewBox="0 0 18.872 25" enable-background="new 0 0 18.872 25" xml:space="preserve">
+                <g>
+                    <g>
+                        <g>
+                            <path  d="M6.323,1.65c2.684-1.079,3.283,5.578,2.005,8.077c0,0,2.653,0.231,3.618,0.353
+                                c1.857,0.231,1.857,3.76,0.272,3.76c2.194,0,1.585,3.721,0,3.721c2.565,0,1.585,3.721,0,3.721c3.344,0,1.585,3.719,0,3.719
+                                c-1.24,0-8.607,0-8.607,0c-3.71,0.027-3.902-6.795-3.42-11.453c0.258-2.496,3.16-2.678,4.072-4.647
+                                C5.451,6.337,4.807,2.261,6.323,1.65z"/>
+                        </g>
+                    </g>
+                </g>
+                </svg>
+</a>
+   </div>
+<div class='songImg'><img src='{{albumArtUrl}}'/></div>
+<div class='songInfo'><p class='songName'>{{songName}}</p>
+
+    {{#if artistLink }}
+        <a class='artistName' href='{{artistLink}}'>{{artistName}}</a>
+    {{else}}
+        <p class='artistName'>{{artistName}}</p>
+    {{/if}}
+
+</div>
+
+</div>

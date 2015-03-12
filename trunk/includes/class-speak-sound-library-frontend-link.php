@@ -83,10 +83,9 @@ class Speak_Sound_Library_Frontend_Link {
         $i = 0;
         $songs = array();
         foreach($postArray as $post){
-
+            $attachmentID = get_post_meta( $post->ID, 'attachment_id')[0];
             $thumbnail_id = get_post_thumbnail_id($post->ID);
             $thumbnail_object = get_post($thumbnail_id);
-
             $song = array(
                 "id" => $post->post_name,
                 "songName" => $post->post_title ,   //song name
@@ -99,7 +98,7 @@ class Speak_Sound_Library_Frontend_Link {
                 "isFeatured" => in_category("featured", $post->ID),
                 "trackInfo" => $post->post_content,
                 "artistLink" =>  get_post_meta($post->ID, 'artist_link', true),
-
+                "duration" => get_post_meta($post->ID, 'length', true)
             );
             array_push($songs, $song);
             $i++;

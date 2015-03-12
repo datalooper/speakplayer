@@ -100,8 +100,22 @@ class Speak_Sound_Library_Public {
         wp_enqueue_script( 'backbone', plugin_dir_url( __FILE__ ) . 'js/backbone.js', array( 'jquery' ), $this->version, true );
 
         wp_enqueue_script( 'marionette', plugin_dir_url( __FILE__ ) . 'js/backbone.marionette.js', array( 'jquery' ), $this->version, true );
+        wp_enqueue_script( 'radio', plugin_dir_url( __FILE__ ) . 'js/backbone.radio.js', array( 'jquery' ), $this->version, true );
 
-		wp_enqueue_script( $this->speak_sound_library, plugin_dir_url( __FILE__ ) . 'js/speak_sound_library-public.js', array( 'jquery' ), $this->version, true );
+        wp_enqueue_script( 'radioshim', plugin_dir_url( __FILE__ ) . 'js/radio.shim.js', array( 'jquery' ), $this->version, true );
+
+        wp_enqueue_script( 'handlebars', plugin_dir_url( __FILE__ ) . 'js/handlebars.runtime-v3.0.0.js', array( 'jquery' ), $this->version, true );
+        wp_enqueue_script( 'handlebars_templates', plugin_dir_url( __FILE__ ) . 'js/renderedTemplates.js', array( 'jquery' ), $this->version, true );
+
+
+        wp_enqueue_script('jquery-ui-sortable');
+        wp_enqueue_script('jquery-ui-tabs');
+        wp_enqueue_script('jquery-ui-slider');
+        wp_enqueue_script('jquery-ui-tooltip');
+        wp_enqueue_script('custom-scrollbar');
+        wp_enqueue_script('sketch');
+
+        wp_enqueue_script( $this->speak_sound_library, plugin_dir_url( __FILE__ ) . 'js/speak_sound_library-public.js', array( 'jquery' ), $this->version, true );
 
 	}
 
