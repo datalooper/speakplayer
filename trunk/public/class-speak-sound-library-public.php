@@ -73,8 +73,6 @@ class Speak_Sound_Library_Public {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->speak_sound_library, plugin_dir_url( __FILE__ ) . 'css/speaksound_library-public.css', array(), $this->version, 'all' );
-
 	}
 
 	/**
@@ -99,12 +97,12 @@ class Speak_Sound_Library_Public {
 
         wp_enqueue_script( 'backbone', plugin_dir_url( __FILE__ ) . 'js/backbone.js', array( 'jquery' ), $this->version, true );
 
-        wp_enqueue_script( 'marionette', plugin_dir_url( __FILE__ ) . 'js/backbone.marionette.js', array( 'jquery' ), $this->version, true );
+        wp_enqueue_script( 'marionette', plugin_dir_url( __FILE__ ) . 'js/backbone.marionette.min.js', array( 'jquery' ), $this->version, true );
         wp_enqueue_script( 'radio', plugin_dir_url( __FILE__ ) . 'js/backbone.radio.js', array( 'jquery' ), $this->version, true );
 
         wp_enqueue_script( 'radioshim', plugin_dir_url( __FILE__ ) . 'js/radio.shim.js', array( 'jquery' ), $this->version, true );
 
-        wp_enqueue_script( 'handlebars', plugin_dir_url( __FILE__ ) . 'js/handlebars.runtime-v3.0.0.js', array( 'jquery' ), $this->version, true );
+        wp_enqueue_script( 'handlebars', plugin_dir_url( __FILE__ ) . 'js/handlebars.runtime-v4.0.5.js', array( 'jquery' ), $this->version, true );
         wp_enqueue_script( 'handlebars_templates', plugin_dir_url( __FILE__ ) . 'js/renderedTemplates.js', array( 'jquery' ), $this->version, true );
 
 
@@ -119,4 +117,18 @@ class Speak_Sound_Library_Public {
 
 	}
 
+    public function start_buffer(){
+        ob_start();
+    }
+    //This is hardcoded badness and should be replaced with a dynamic solution.
+    public function route_subpages(){
+        global $post;
+        if($post->post_title == 'Music'){
+            wp_redirect( home_url().'?songName='.$_GET["songName"]  ); exit;
+        }
+        session_start();
+        $_SESSION["songName"]=$_GET["songName"];
+
+
+    }
 }

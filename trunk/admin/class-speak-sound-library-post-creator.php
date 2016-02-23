@@ -180,6 +180,10 @@ class Speak_Sound_Library_Post_Creator {
                 add_post_meta($post_id, 'genre', $meta['genre']);
 
 
+
+                //number of plays
+                add_post_meta($post_id, 'numberplays', 0);
+
                 //sound file url
                 add_post_meta($post_id, 'wp_custom_attachment', $attachment->guid);
                 update_post_meta($post_id, 'wp_custom_attachment', $attachment->guid);

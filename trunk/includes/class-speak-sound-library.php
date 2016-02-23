@@ -145,6 +145,12 @@ class Speak_Sound_Library {
          */
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-speak-sound-library-frontend-link.php';
 
+        /**
+         * The class responsible for orchestrating the actions and filters of the
+         * core plugin.
+         */
+        //require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/radio-button-taxonomy.php';
+
 		$this->loader = new Speak_Sound_Library_Loader();
 
 	}
@@ -197,9 +203,14 @@ class Speak_Sound_Library {
         $this->loader->add_action( 'wp_ajax_uploader_callback',$plugin_post_creator, 'uploaderCallback' );
         $this->loader->add_action('wp_ajax_get_songs', $frontend_link, 'getSongs');
         $this->loader->add_action('wp_ajax_nopriv_get_songs', $frontend_link, 'getSongs');
+        $this->loader->add_action('wp_ajax_addPlay', $frontend_link, 'addPlay');
+        $this->loader->add_action('wp_ajax_nopriv_addPlay', $frontend_link, 'addPlay');
+
         $this->loader->add_action( 'wp_head', $frontend_link, 'add_ajax_library'  );
-
-
+        $this->loader->add_action( 'artists_add_form_fields', $plugin_admin_meta, 'artists_add_new_meta_field', 10, 2 );
+        $this->loader->add_action( 'artists_edit_form_fields',  $plugin_admin_meta, 'artists_edit_meta_field', 10, 2 );
+        $this->loader->add_action( 'edited_artists', $plugin_admin_meta, 'save_artists_custom_meta', 10, 2 );
+        $this->loader->add_action( 'create_artists', $plugin_admin_meta, 'save_artists_custom_meta', 10, 2 );
         $this->loader->add_action( 'manage_edit-'.$this->custom_post_type.'_columns', $plugin_admin, 'edit_columns' );
         $this->loader->add_action( 'manage_'.$this->custom_post_type.'_posts_custom_column', $plugin_admin, 'manage_column',10,2 );
         $this->loader->add_action( 'manage_edit-'.$this->custom_post_type.'_sortable_columns', $plugin_admin, 'edit_sortable_columns' );
@@ -221,7 +232,9 @@ class Speak_Sound_Library {
 
 		 $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		 $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+        $this->loader->add_action('init', $plugin_public, 'start_buffer');
 
+        $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'route_subpages');
 	}
 
 	/**

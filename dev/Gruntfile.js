@@ -24,7 +24,19 @@ module.exports = function(grunt) {
       },
       dist: {
         src: [
-        'public/js/backbone.marionette.min.js','public/js/app/Speakplayer.js', 'public/js/entities/SpeakPlayer.Entities.js', 'public/js/modules/*.js'
+        'public/js/app/Speakplayer.js', 'public/js/entities/SpeakPlayer.Entities.js',
+            'public/js/modules/SpeakPlayer.Loader.js',
+            'public/js/modules/SpeakPlayer.AudioModule.js',
+            'public/js/modules/SpeakPlayer.FeaturedSound.js',
+            'public/js/modules/SpeakPlayer.FilterModule.js',
+            'public/js/modules/SpeakPlayer.Library.js',
+            'public/js/modules/SpeakPlayer.Playlist.js',
+            'public/js/modules/SpeakPlayer.Player.js',
+            'public/js/modules/SpeakPlayer.RouterModule.js',
+            'public/js/modules/SpeakPlayer.Search.js',
+            'public/js/modules/SpeakPlayer.SoundPost.js',
+
+
         ],
 
         dest: '../trunk/public/js/speak_sound_library-public.js'
@@ -53,7 +65,7 @@ module.exports = function(grunt) {
         tasks: ['shell']
     },
       concat: {
-        files: ['public/js/modules/SpeakPlayer.js','public/js/modules/SpeakPlayer.Entities.js','public/js/*.js','public/js/modules/*.js'],
+        files: ['public/js/app/Speakplayer.js', 'public/js/entities/SpeakPlayer.Entities.js', 'public/js/modules/*.js' ],
         tasks: 'compileJS',
         options: {
           spawn: false

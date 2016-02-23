@@ -2,7 +2,7 @@
  * Created by vcimo5 on 1/29/15.
  */
 
-var SpeakPlayer = new Backbone.Marionette.Application();
+SpeakPlayer = new Backbone.Marionette.Application();
 
 var channel;
 var songList;
@@ -31,12 +31,11 @@ SpeakPlayer.on('initialize:before', function(options) {
 
 });
 
-SpeakPlayer.on('initialize:after', function(options) {
-
-});
 
 SpeakPlayer.on('start', function(options) {
-  	Backbone.history.start();
+    console.log("start history");
+
+    Backbone.history.start({pushState: true, hashChange: false});
 
 });
 
@@ -47,22 +46,17 @@ SpeakPlayer.addInitializer(function(options) {
 	SpeakPlayer.addRegions({
 		//TODO: Add the rest of the regions.
 		libraryRegion: options.libraryContainer,
+        featuredRegion : options.featuredContainer,
+        filterRegion : options.filterContainer,
 		playerRegion: options.playerContainer,
-		playlistRegion: options.playlistContainer
+		playlistRegion: options.playlistContainer,
+        loaderRegion : options.loaderContainer
 	});
 
 	SpeakPlayer.isTouchDevice = isTouchDevice();
+
 });
 
 
 
 
-//Start the application. Options should contain 'libraryContainer', 'playerContainer', 'playlistContainer'
-var options = {
-	//this object will get passed to initialization events
-    libraryContainer : "#library",
-    playerContainer : "#player",
-    playlistContainer : "#playlist"
-};
-
-SpeakPlayer.start(options);

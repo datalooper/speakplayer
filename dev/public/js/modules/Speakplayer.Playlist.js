@@ -13,6 +13,8 @@ SpeakPlayer.module("Playlist", function(Playlist, App, Backbone, Marionette, $, 
 
         playlistView = new PlaylistView({collection:playlistCollection});
         SpeakPlayer.playlistRegion.show(playlistView);
+        SpeakPlayer.channel.reply('currentPlaylist', playlistCollection);
+
 
     });
 
@@ -23,15 +25,15 @@ SpeakPlayer.module("Playlist", function(Playlist, App, Backbone, Marionette, $, 
     var PlaylistItem = Backbone.Marionette.ItemView.extend({
         template: Handlebars.templates['playlistItem.hbs'],
         tagName : 'li',
+
         ui: {
-            removeFromPlaylist : '.controls .removeFromPlaylist',
+            removeFromPlaylist : '.controls .remove',
             play : '.controls .play',
             pause : '.controls .pause',
             nextButton : '.controls .next'
         },
 
         modelEvents:{
-
             "change:isLiked" : function(){
                 console.log("Song Liked Set To", this.model.get("isLiked"));
             }
@@ -45,14 +47,17 @@ SpeakPlayer.module("Playlist", function(Playlist, App, Backbone, Marionette, $, 
                     console.log("playlist setting song");
                     SpeakPlayer.channel.trigger('setSong', this.model);
                 }
+                return false;
             },
 
             'click @ui.pause' : function(){
                 SpeakPlayer.channel.trigger('pause');
+                return false;
             },
 
             'click @ui.removeFromPlaylist' : function(){
                 SpeakPlayer.channel.trigger('removeFromPlaylist', this.model);
+                return false;
             },
 
             'click @ui.likeTrack' : function(){
@@ -60,21 +65,33 @@ SpeakPlayer.module("Playlist", function(Playlist, App, Backbone, Marionette, $, 
             }
         },
         togglePlayPause : function(playing){
-            //TODO change to css classes
-            this.ui.play.toggle(!playing);
-            this.ui.pause.toggle(playing);
+            this.$el.toggleClass("playing", playing);
+        },
+        setCurrent : function(isCurrent){
+            this.$el.toggleClass("current", isCurrent);
         }
     });
     var PlaylistView = Backbone.Marionette.CollectionView.extend({
+
         initialize : function(){
+            this.$el.sortable({
+                containment: "parent",
+                delay : 100,
+                revert: true,
+                tolerance: "intersect"
+            });
+            this.$el.disableSelection();
+            this.$el.addClass('hide');
             this.currentSong = SpeakPlayer.channel.request('currentSong');
+            this.listenTo(SpeakPlayer.channel, "setSong", this.setSong);
+
             this.listenTo(this.currentSong, "change:isPlaying", this.onPlayStatusChange);
             this.listenTo(SpeakPlayer.channel, "addToPlaylist", this.addToPlaylist);
             this.listenTo(SpeakPlayer.channel, "removeFromPlaylist", this.removeFromPlaylist);
-            this.listenTo(SpeakPlayer.channel, "setSong", this.setSong);
             this.listenTo(SpeakPlayer.channel, "nextSong", this.nextSong);
             this.listenTo(SpeakPlayer.channel, "previousSong", this.previousSong);
-
+            this.listenTo(SpeakPlayer.channel, "playlistToggle", this.playlistToggle);
+            this.listenTo(SpeakPlayer.channel, "clearPlaylist", this.clearPlaylist);
         },
         tagName : 'ul',
         childView: PlaylistItem,
@@ -83,9 +100,11 @@ SpeakPlayer.module("Playlist", function(Playlist, App, Backbone, Marionette, $, 
             if(this.collection.length == 0){
                 SpeakPlayer.channel.trigger("setSong", song);
             }
+
             this.collection.add(song);
+            console.log("added to playlist, current song:",SpeakPlayer.channel.request('isCurrentSong', song));
             if(SpeakPlayer.channel.request('isCurrentSong', song)){
-                this.children.findByModel(song).togglePlayPause(this.currentSong.get('isPlaying'));
+                this.children.findByModel(song).togglePlayPause(true);
             } else{
                 this.children.findByModel(song).togglePlayPause(false);
 
@@ -94,18 +113,32 @@ SpeakPlayer.module("Playlist", function(Playlist, App, Backbone, Marionette, $, 
         },
         removeFromPlaylist : function(song){
             this.collection.remove(song);
-            SpeakPlayer.channel.trigger('clearSong');
-
+            if(song.get('isPlaying')) {
+                SpeakPlayer.channel.trigger('clearSong');
+            }
             if(this.collection.length > 0) {
-                SpeakPlayer.channel.trigger('nextSong');
+                //SpeakPlayer.channel.trigger('nextSong');
+            } else if(!this.$el.hasClass('hide')){
+                this.playlistToggle();
             }
         },
         setSong : function(song){
+
             var index = this.collection.indexOf(song);
             if(index == -1) {
                 this.collection.add(song, {at: 0});
-                index = 0;
+
             }
+
+            this.children.each(function(view){
+                if(view.model != song) {
+                    view.setCurrent(false);
+                } else{
+                    view.togglePlayPause(true);
+                    view.setCurrent(true);
+                }
+            });
+
         },
         nextSong : function(){
 
@@ -118,7 +151,6 @@ SpeakPlayer.module("Playlist", function(Playlist, App, Backbone, Marionette, $, 
         },
         previousSong : function(song){
             var prevSongIndex = this.collection.indexOf(this.currentSong.get('song')) - 1;
-
             if(prevSongIndex >= 0){
                 var newSong = this.collection.at(prevSongIndex);
                 SpeakPlayer.channel.trigger("setSong", newSong);
@@ -127,8 +159,25 @@ SpeakPlayer.module("Playlist", function(Playlist, App, Backbone, Marionette, $, 
             }
         },
         onPlayStatusChange : function(){
+
             var song = this.currentSong.get('song');
-            this.children.findByModel(song).togglePlayPause(this.currentSong.get('isPlaying'));
+            if(song != null) {
+                var matchingChildView =  this.children.findByModel(song);
+                if(matchingChildView != null) {
+
+                    matchingChildView.togglePlayPause(this.currentSong.get('isPlaying'));
+                }
+            }
+        },
+        playlistToggle : function(){
+            console.log("toggle playlist");
+            this.$el.toggleClass('hide');
+            setTimeout(function(){
+                SpeakPlayer.channel.trigger('resize');
+            }, 1);
+        },
+        clearPlaylist : function(){
+            this.collection.reset();
         }
 
 

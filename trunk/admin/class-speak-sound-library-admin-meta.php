@@ -75,7 +75,48 @@ class Speak_Sound_Library_Admin_Meta
 
         };
     }
+    function artists_edit_meta_field($term) {
 
+        // put the term ID into a variable
+        $t_id = $term->term_id;
+
+        // retrieve the existing value(s) for this meta field. This returns an array
+        $term_meta = get_option( "taxonomy_$t_id" ); ?>
+        <tr class="form-field">
+            <th scope="row" valign="top"><label for="term_meta[artistLink]"><?php _e( 'Artist Link', 'pippin' ); ?></label></th>
+            <td>
+                <input type="text" name="term_meta[artistLink]" id="term_meta[artistLink]" value="<?php echo esc_attr( $term_meta['artistLink'] ) ? esc_attr( $term_meta['artistLink'] ) : ''; ?>">
+                <p class="description"><?php _e( 'Enter the artist website url','pippin' ); ?></p>
+            </td>
+        </tr>
+        <?php
+    }
+    function artists_add_new_meta_field() {
+        // this will add the custom meta field to the add new term page
+        ?>
+        <div class="form-field">
+            <label for="term_meta[artistLink]"><?php _e( 'Artist Link', 'pippin' ); ?></label>
+            <input type="text" name="term_meta[artistLink]" id="term_meta[artistLink]" value="">
+            <p class="description"><?php _e( 'Enter the artist website url','pippin' ); ?></p>
+        </div>
+        <?php
+    }
+    // Save extra taxonomy fields callback function.
+    function save_artists_custom_meta( $term_id ) {
+        error_log("saving meta");
+        if ( isset( $_POST['term_meta'] ) ) {
+            $t_id = $term_id;
+            $term_meta = get_option( "taxonomy_$t_id" );
+            $cat_keys = array_keys( $_POST['term_meta'] );
+            foreach ( $cat_keys as $key ) {
+                if ( isset ( $_POST['term_meta'][$key] ) ) {
+                    $term_meta[$key] = $_POST['term_meta'][$key];
+                }
+            }
+            // Save the option array.
+            update_option( "taxonomy_$t_id", $term_meta );
+        }
+    }
     function artist_link_metabox()
     {
         wp_nonce_field(plugin_basename(__FILE__), 'wp_artist_link_nonce');

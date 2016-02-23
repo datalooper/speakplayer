@@ -33,9 +33,15 @@ SpeakPlayer.module("AudioModule", function(AudioModule, App, Backbone, Marionett
                 currentSong.set('isPlaying', true);
 
             });
-
+            audioElement.addEventListener('loadedmetadata', function() {
+                console.log("metadata loaded");
+                if(currentSong.get('duration') == null) {
+                    currentSong.get('song').set('duration', audioElement.duration);
+                    SpeakPlayer.channel.trigger('setSongDuration', currentSong.get('song'));
+                }
+            });
             audioElement.addEventListener("ended", function() {
-                SpeakPlayer.channel.trigger('songEnded');
+                SpeakPlayer.channel.trigger('nextSong');
             });
 
             audioElement.addEventListener("timeupdate", function() {
@@ -44,15 +50,17 @@ SpeakPlayer.module("AudioModule", function(AudioModule, App, Backbone, Marionett
 
             SpeakPlayer.channel.on('setSong', function (song) {
                 audioElement.src = song.get('songUrl');
-                audioElement.volume = .03;
                 audioElement.play();
             });
+
 
             SpeakPlayer.channel.on('clearSong', function(){
                audioElement.src = "";
             });
+            SpeakPlayer.channel.on('clearPlaylist', function(){
+                audioElement.src = "";
+            });
             SpeakPlayer.channel.on('seekTo', function(percentage){
-                console.log(currentSong);
                 audioElement.currentTime = currentSong.get('song').get('duration')*(percentage / 100);
             });
 
@@ -69,7 +77,6 @@ SpeakPlayer.module("AudioModule", function(AudioModule, App, Backbone, Marionett
                     prevVolume = NOT_SET;
                 }
             });
-
         }
     });
 

@@ -65,7 +65,6 @@ jQuery(document).ready(function($){
             'action': 'createNewSoundsFromFolderSubmit',
             'soundsUrl':  $('#upload_sound').val()
         };
-        console.log(ajax_object.ajax_url);
         jQuery.post(ajax_object.ajax_url, data, function(response) {
             console.log(response);
             if(response.length > 0){

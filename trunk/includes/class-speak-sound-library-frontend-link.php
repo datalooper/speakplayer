@@ -13,7 +13,12 @@ class Speak_Sound_Library_Frontend_Link {
         $this->custom_post_name = $custom_post_name;
 
     }
-
+    function addPlay(){
+        $post_id = intval( $_POST['postid'] );
+        $numplays = get_post_meta( $post_id, 'numplays')[0];
+        update_post_meta($post_id, 'numplays', $numplays+1);
+        die();
+    }
     function getAudioAttachments(){
         $args = array
         (
@@ -28,6 +33,8 @@ class Speak_Sound_Library_Frontend_Link {
             $thumbnail_id = get_post_thumbnail_id($file->ID);
             $thumbnail_object = get_post($thumbnail_id);
             $meta = get_post_meta( $file->ID, '_wp_attachment_metadata')[0];
+            error_log(print_r($meta, true));
+
             $song = array(
                 "id" => $file->post_name,
                 "songName" => $meta['title'],   //song name
@@ -83,23 +90,26 @@ class Speak_Sound_Library_Frontend_Link {
         $i = 0;
         $songs = array();
         foreach($postArray as $post){
-            $attachmentID = get_post_meta( $post->ID, 'attachment_id')[0];
+            $meta = get_post_meta( $post->ID);
+
             $thumbnail_id = get_post_thumbnail_id($post->ID);
             $thumbnail_object = get_post($thumbnail_id);
             $song = array(
-                "id" => $post->post_name,
-                "songName" => $post->post_title ,   //song name
+                "id" => $post->ID,
+                "songName" => htmlspecialchars_decode($post->post_title) ,   //song name
                 "songUrl" => get_post_meta($post->ID, 'wp_custom_attachment', true), //song url
-                "artistName" => get_post_meta($post->ID,'artist')[0], //artist
-                "albumName" => get_post_meta($post->ID,'album')[0],
+                "artistName" => $meta['artist'],
+                "albumName" => $meta['album'], //album
                 "albumArtUrl" => wp_get_attachment_image_src( $thumbnail_object->ID, 'thumbnail')[0],
-                "genre" => get_post_meta($post->ID,'genre')[0],
+                "albumArtLargeUrl" => wp_get_attachment_image_src( $thumbnail_object->ID, 'large')[0],
+                "genre" => htmlspecialchars_decode(wp_get_post_terms($post->ID, 'genres')[0]->name),
                 "releaseDate" => mysql2date('j M Y', $post->post_date),
+                "numPlays" => get_post_meta($post->ID, 'numplays', 0),
+                "nonformattedDate" => $post->post_date,
                 "isFeatured" => in_category("featured", $post->ID),
                 "trackInfo" => $post->post_content,
                 "artistLink" =>  get_post_meta($post->ID, 'artist_link', true),
-                "duration" => get_post_meta($post->ID, 'length', true)
-            );
+                "duration" => $meta['length']            );
             array_push($songs, $song);
             $i++;
         }
@@ -109,4 +119,23 @@ class Speak_Sound_Library_Frontend_Link {
         die();
     }
 
-} 
+    public static function getSound( $atts )
+    {
+        $atts = shortcode_atts(array(
+            'id' => ''), $atts, 'sound');
+
+        return "<div class='soundPost cf' data-soundid='{$atts['id']}'></div>";    }
+}
+
+
+
+    /* @Recreate the default filters on the_content so we can pull formated content with get_post_meta
+    -------------------------------------------------------------- */
+    add_filter( 'meta_content', 'wptexturize'        );
+    add_filter( 'meta_content', 'convert_smilies'    );
+    add_filter( 'meta_content', 'convert_chars'      );
+    add_filter( 'meta_content', 'wpautop'            );
+    add_filter( 'meta_content', 'shortcode_unautop'  );
+    add_filter( 'meta_content', 'prepend_attachment' );
+
+add_shortcode( 'sound', array( 'Speak_Sound_Library_Frontend_Link', 'getSound' ) );

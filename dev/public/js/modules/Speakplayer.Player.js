@@ -3,45 +3,73 @@
 */
 SpeakPlayer.module("Player", function(Player, App, Backbone, Marionette, $, _){
 
-    var seekBar;
-    var volumeSlider;
 
+    var currentSong;
     Player.addInitializer(function(options) {
+        currentSong = SpeakPlayer.channel.request('currentSong');
+
         Player.controller = new Controller();
-        var playerView = new PlayerView({model:SpeakPlayer.channel.request('currentSong')});
-        SpeakPlayer.playerRegion.show(playerView);
+        SpeakPlayer.channel.on("songListSynced", function() {
+
+            var playerView = new PlayerView({model: currentSong });
+            SpeakPlayer.playerRegion.show(playerView);
+        });
     });
 
     //*********** Declaring Views ***********//
 
-
+    var seekBar;
+    var volumeSlider;
     var PlayerView = Backbone.Marionette.ItemView.extend({
         template: Handlebars.templates['player.hbs'],
-
+        id: "player",
+        NOT_SET : -1,
+        prevVolume : -1,
         ui: {
             seekBar : '.seekBar',
             controls : '.controls',
             startTime : '#startTime',
             endTime : '#endTime',
             playlistButton : '.controls .playlist',
-            volumeButton : '.controls .volume',
+            volumeButton : '.controls .volume svg',
             volumeSlider : '#volumeSlider',
             previousButton : '.controls .previous',
             resume : '.controls .resume',
             pause : '.controls .pause',
-            nextButton : '.controls .next'
+            nextButton : '.controls .next',
+            songName : ".currentlyPlaying .songName",
+            artistName : ".currentlyPlaying .artist",
+            playlistHelper : '.controls .playlistHelper'
         },
 
-        initialize : function(){
+        initialize : function() {
+            this.$el.addClass('hide');
             this.listenTo(SpeakPlayer.channel, "setSong", this.setSong);
+            this.listenTo(SpeakPlayer.channel, "setSongDuration", this.setSongDuration);
             this.listenTo(SpeakPlayer.channel, "audioTimeUpdate", this.audioTimeUpdate);
-        },
+            this.listenTo(SpeakPlayer.channel, "addToPlaylist", this.togglePlayerVisibility);
+            this.listenTo(SpeakPlayer.channel, "pause", this.togglePlayPause);
+            this.listenTo(SpeakPlayer.channel, "resume", this.togglePlayPause);
+            this.listenTo(SpeakPlayer.channel, "seekStarted", this.seekStarted);
+            this.listenTo(SpeakPlayer.channel, "seekTo", this.seekStopped);
+            this.listenTo(SpeakPlayer.channel, "addToPlaylist", this.showPlaylistCounter);
+            this.listenTo(SpeakPlayer.channel, "setSong", this.showPlaylistCounter);
+            this.listenTo(SpeakPlayer.channel, "removeFromPlaylist", this.showPlaylistCounter);
 
+            this.listenTo(SpeakPlayer.channel, "removeFromPlaylist", this.togglePlayerVisibility);
+
+        },
         modelEvents: {
-            'change:song' : "render"
+            'change:isPlaying' : function () {
+                this.togglePlayPause();
+            }
         },
 
+        sliding : false,
         events: {
+            'click @ui.volumeSlider' : function(e){
+                e.preventDefault();
+            },
             'click @ui.resume': function(e){
                 e.preventDefault();
                 this.model.set("isPlaying", true);
@@ -53,12 +81,11 @@ SpeakPlayer.module("Player", function(Player, App, Backbone, Marionette, $, _){
             },
             'click @ui.playlistButton' : function(e){
                 e.preventDefault();
+                SpeakPlayer.channel.trigger('playlistToggle');
 
-                console.log("playlist clicked");
             },
             'click @ui.nextButton' : function(e){
                 e.preventDefault();
-
                 SpeakPlayer.channel.trigger('nextSong');
             },
             'click @ui.previousButton' : function(e){
@@ -69,68 +96,111 @@ SpeakPlayer.module("Player", function(Player, App, Backbone, Marionette, $, _){
             'click @ui.volumeButton' : function(e){
                 e.preventDefault();
                 SpeakPlayer.channel.trigger('volumeClick');
+                if(this.prevVolume == this.NOT_SET){
+                    this.prevVolume = this.volumeSlider.slider('value');
+                    SpeakPlayer.channel.trigger('setVolume', 0);
+                    this.volumeSlider.slider('value', 0)
+                } else{
+                    SpeakPlayer.channel.trigger('setVolume', this.prevVolume);
+                    this.volumeSlider.slider('value', this.prevVolume);
+                    this.prevVolume = this.NOT_SET;
 
-                console.log("volume clicked");
+                }
             },
             'hover @ui.volumeButton' : function(hoverState){
 
                 if(hoverState.type == 'mouseenter'){
-                    console.log("hovering over volume button");
                 } else{
-                    console.log("hovering off volume button");
                 }
             }
         },
-        render: function(){
-            if(this.$el.html() == "") {
-                this.$el.html(this.template(options));
-            }
-            return this;
+        seekStarted : function(){
+          this.sliding = true;
         },
-        onAttach: function(){
-            $(this.ui.seekBar).slider({
+        seekStopped : function(){
+          this.sliding = false;
+        },
+        onShow: function(){
+            this.seekBar = this.ui.seekBar.slider({
                 range: "min",
                 value: 0,
                 min: 1
             });
-
-            $(this.ui.volumeSlider).slider({
+            this.volumeSlider = this.ui.volumeSlider.slider({
                 orientation: "vertical",
                 range: "min",
                 min: 0,
                 max: 100,
-                value: 60
+                value: 100
             });
-            $(this.ui.volumeSlider).on( "slidechange", function( event, ui ) {
-                SpeakPlayer.channel.trigger('setVolume', ui.value);
-            } );
-            $(this.ui.seekBar).on( "slidechange", function( event, ui ) {
+
+            this.seekBar.on('slidestop', function(event, ui){
                 SpeakPlayer.channel.trigger('seekTo', ui.value);
-            } );
+            });
+
+            this.seekBar.on('slidestart', function(event, ui){
+                SpeakPlayer.channel.trigger('seekStarted');
+
+            });
+            this.volumeSlider.on('slidechange', function(event, ui){
+                SpeakPlayer.channel.trigger('setVolume', ui.value);
+            });
+
         },
 
+        togglePlayerVisibility : function(){
+            var shouldShow = false;
+            if(SpeakPlayer.channel.request('currentPlaylist').length > 0){
+                shouldShow = true;
+            }
+            this.$el.toggleClass('hide', !shouldShow);
+            SpeakPlayer.channel.trigger("resize");
 
+        },
         audioTimeUpdate : function(time){
-            var prevTime, newTime;
+            var prevTime, newTime, currentModel = currentSong.get('song');
+
             newTime = secondsToTime(time);
             if( newTime != prevTime) {
                 $(this.ui.startTime).html(newTime);
                 prevTime = newTime;
             }
+
+            if( !this.sliding && currentModel != null) {
+                this.seekBar.slider("value", (time / currentModel.get('duration') * 100 ));
+            }
         },
 
         //Called everytime a new song is set. Re-Binds all the things
         setSong : function(song){
+
             //setting underlying song model for player to use
             this.model.set('song', song);
+
+            this.togglePlayerVisibility();
+            this.togglePlayPause();
+            $(this.ui.songName).html(song.get("songName"));
+            $(this.ui.artistName).html(song.get("artistName"));
+
+
+        },
+        setSongDuration : function(song){
             $(this.ui.endTime).html(secondsToTime(song.get('duration')));
 
         },
         togglePlayPause : function(){
 
             var playing = this.model.get('isPlaying');
-            $(this.ui.pause).toggle(playing);
-            $(this.ui.resume).toggle(!playing);
+            $(this.ui.pause).toggleClass("hide", !playing);
+            $(this.ui.resume).toggleClass("hide", playing);
+        },
+        showPlaylistCounter : function(){
+            var currentPlaylist = SpeakPlayer.channel.request('currentPlaylist'), helper = this.ui.playlistHelper;
+
+            helper.html(currentPlaylist.length).fadeIn(200);
+            setTimeout(function(){
+                helper.fadeOut(200);
+            }, 2000);
         }
 
 
