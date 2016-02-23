@@ -1,0 +1,8 @@
+{
+"version": 3,
+"mappings": ";AAAA,EAAE;EACD,KAAK,EAAC,IAAI",
+"sources": ["public/scss/_colors.scss"],
+"sourcesContent": ["h2{\n\tcolor:#000;\n}"],
+"names": [],
+"file": "speakplayer-public.css"
+}
