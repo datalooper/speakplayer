@@ -111,8 +111,11 @@ class WordPress_Radio_Taxonomy {
 
          wp_register_script( 'radiotax', plugin_dir_url( __FILE__ ) . 'js/radiotax.js', array('jquery'), null, true ); // We specify true here to tell WordPress this script needs to be loaded in the footer
 		wp_localize_script( 'radiotax', 'radio_tax', array('slug'=>self::$taxonomy));
-		wp_enqueue_script( 'radiotax' );  
-	}
+
+		wp_enqueue_script( 'radiotax' );
+
+
+     }
 
 	public function ajax_add_term(){
 
@@ -120,7 +123,7 @@ class WordPress_Radio_Taxonomy {
 		$term = !empty($_POST['term']) ? $_POST['term'] : '';
 		$tax = get_taxonomy($taxonomy);
 
-		check_ajax_referer('radio-tax-add-'.$taxonomy, '_wpnonce_radio-add-tag');
+		check_ajax_referer('radio-tax-add-'.    $taxonomy, '_wpnonce_radio-add-tag');
 
 		if(!$tax || empty($term))
 			exit();

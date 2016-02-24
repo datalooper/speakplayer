@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 /**
  * The dashboard-specific functionality of the plugin.
@@ -103,7 +103,17 @@ class Speak_Sound_Library_Admin {
         // in javascript, object properties are accessed as ajax_object.ajax_url, ajax_object.we_value
         wp_localize_script( $this->plugin_name, 'ajax_object',
             array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'attachment' => "" ) );
+
+        wp_register_script( 'sc', plugin_dir_url( __FILE__ ) . 'js/sdk-3.0.0.js', array('jquery'), $this->version, false ); // We specify true here to tell WordPress this script needs to be loaded in the footer
+        wp_localize_script( 'sc', 'soundcloud', array('slug'=>'sc'));
+
+        wp_enqueue_script( 'sc' );
     }
+
+    public function create_sm_settings(){
+        add_option('soundcloud_users');
+    }
+
 
 
     public function initialize_player(){
@@ -114,9 +124,12 @@ class Speak_Sound_Library_Admin {
                 'name' => __( 'Sounds' ), // general name in menu & admin page
                 'singular_name' => __( 'Sound' )
             ),
-            'taxonomies' => array('category'),
+            'taxonomies' => array(''),
             'public' => true,
             'has_archive' => true,
+            'capabilities' => array(
+                'create_posts' => false
+            ),
             'supports' => array( 'title', 'editor', 'thumbnail' ),
         );
 
@@ -126,6 +139,9 @@ class Speak_Sound_Library_Admin {
         $this->create_taxonomy("Genres", "Genre", "genres");
         $this->create_taxonomy("Artists", "Artist", "artists");
         $this->create_taxonomy("Albums", "Album", "albums");
+
+
+
     }
 
     public function edit_columns($columns){
@@ -219,11 +235,32 @@ function edit_sort_orderby( $query ) {
 
     }
 
+
+
     public function create_admin_menu(){
-        $menuSlug = 'sound_manager_options';
-        $menuSlug2 = 'sound_manager_folder';
-        add_submenu_page('edit.php?post_type='.$this->custom_post_name, 'Add New Sound', 'Add New Sound', 'manage_options', $menuSlug, 'sound_manager_admin_page');
-        add_submenu_page('edit.php?post_type='.$this->custom_post_name, 'Add Sounds from Folder', 'Add Sounds from Folder', 'manage_options', $menuSlug2, 'sound_manager_folder_page');
+        $menuSlug = 'add_new_sounds';
+        add_submenu_page('edit.php?post_type='.$this->custom_post_name, 'Add New Sounds', 'Upload New Sound', 'manage_options', $menuSlug, 'sound_manager_admin_page');
+        add_options_page( 'Sound Manager Options', 'Sound Manager Options', 'manage_options', 'smoptions', array(
+            $this,
+            'smoptionspage'
+        ));
+
+    }
+
+
+
+    function addSoundcloudUser(){
+        global $wpdb; // this is how you get access to the database
+
+        $user = $_POST['user'];
+        $users = unserialize(get_option('soundcloud_users'));
+        if(!$users){
+            $users = array();
+        }
+        array_push($users, $user);
+        update_option('soundcloud_users', serialize($users));
+        print_r($users,true);
+        wp_die();
     }
 
 

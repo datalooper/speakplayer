@@ -97,7 +97,8 @@ class Speak_Sound_Library {
 	 */
 	private function load_dependencies() {
 
-		/**
+
+        /**
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */
@@ -192,6 +193,8 @@ class Speak_Sound_Library {
         $this->loader->add_action( 'init', $plugin_admin, 'initialize_player' );
         $this->loader->add_action( 'admin_menu', $plugin_admin, 'create_admin_menu' );
         $this->loader->add_action( 'admin_init', $plugin_admin_meta, 'create_custom_metaboxes' );
+        $this->loader->add_action( 'admin_init', $plugin_admin, 'create_sm_settings' );
+
         $this->loader->add_action( 'save_post', $plugin_admin_meta, 'mt_save_sound_file' );
         $this->loader->add_action( 'save_post', $plugin_admin_meta, 'save_video_meta' );
         $this->loader->add_action( 'save_post', $plugin_admin_meta, 'save_artist_link' );
@@ -200,6 +203,8 @@ class Speak_Sound_Library {
         $this->loader->add_action( 'wp_ajax_createNewSoundsFromFolderSubmit', $plugin_post_creator, 'createNewSoundsFromFolderSubmit' );
         $this->loader->add_action( 'wp_ajax_createNewSoundSubmit', $plugin_post_creator, 'createNewSoundSubmit' );
         $this->loader->add_action( 'wp_ajax_create_post', $plugin_post_creator, 'createPost' );
+        $this->loader->add_action( 'wp_ajax_add_soundcloud_user', $plugin_admin, 'addSoundcloudUser' );
+
         $this->loader->add_action( 'wp_ajax_uploader_callback',$plugin_post_creator, 'uploaderCallback' );
         $this->loader->add_action('wp_ajax_get_songs', $frontend_link, 'getSongs');
         $this->loader->add_action('wp_ajax_nopriv_get_songs', $frontend_link, 'getSongs');
