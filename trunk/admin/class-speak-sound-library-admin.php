@@ -1,4 +1,4 @@
-    <?php
+<?php
 
 /**
  * The dashboard-specific functionality of the plugin.
@@ -249,19 +249,7 @@ function edit_sort_orderby( $query ) {
 
 
 
-    function addSoundcloudUser(){
-        global $wpdb; // this is how you get access to the database
 
-        $user = $_POST['user'];
-        $users = unserialize(get_option('soundcloud_users'));
-        if(!$users){
-            $users = array();
-        }
-        array_push($users, $user);
-        update_option('soundcloud_users', serialize($users));
-        print_r($users,true);
-        wp_die();
-    }
 
 
 

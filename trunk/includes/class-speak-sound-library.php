@@ -121,16 +121,31 @@ class Speak_Sound_Library {
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-speak-sound-library-admin-meta.php';
 
         /**
-         * The class responsible for defining the create sound page.
+         * The class responsible for defining the create admin pages.
          */
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/speak-sound-library-admin-display.php';
 
         /**
-         * The class responsible for defining the create sound from folder page.
+         * The class responsible for defining the create sound from file page.
          */
-        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/speak-sound-library-sounds-from-folder.php';
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/add-from-file.php';
 
-		/**
+        /**
+         * The class responsible for defining the create sound from file page.
+         */
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/add-from-folder.php';
+
+        /**
+         * The class responsible for defining the create sound from file page.
+         */
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/add-from-soundcloud.php';
+
+        /**
+         * The class responsible for defining the create sound from file page.
+         */
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/soundcloud-list-table.php';
+
+        /**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
@@ -184,9 +199,11 @@ class Speak_Sound_Library {
 	private function define_admin_hooks() {
 
 		$plugin_admin = new Speak_Sound_Library_Admin( $this->get_plugin_name(), $this->get_version(), $this->custom_post_type );
+        $add_from_soundcloud = new Add_From_Soundcloud();
         $plugin_admin_meta = new Speak_Sound_Library_Admin_Meta($this->get_plugin_name(), $this->get_version(), $this->custom_post_type);
         $plugin_post_creator = new Speak_Sound_Library_Post_Creator($this->custom_post_type);
         $frontend_link = new Speak_Sound_Library_Frontend_Link($this->custom_post_type);
+        $soundcloud_list_table = new Soundcloud_List_Table();
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
@@ -203,7 +220,11 @@ class Speak_Sound_Library {
         $this->loader->add_action( 'wp_ajax_createNewSoundsFromFolderSubmit', $plugin_post_creator, 'createNewSoundsFromFolderSubmit' );
         $this->loader->add_action( 'wp_ajax_createNewSoundSubmit', $plugin_post_creator, 'createNewSoundSubmit' );
         $this->loader->add_action( 'wp_ajax_create_post', $plugin_post_creator, 'createPost' );
-        $this->loader->add_action( 'wp_ajax_add_soundcloud_user', $plugin_admin, 'addSoundcloudUser' );
+        $this->loader->add_action( 'wp_ajax_add_soundcloud_user', $add_from_soundcloud, 'addSoundcloudUser' );
+        $this->loader->add_action( 'wp_ajax_post_tracklist', $add_from_soundcloud, 'postTracklist' );
+        $this->loader->add_action('wp_ajax__ajax_fetch_custom_list', $add_from_soundcloud,  '_ajax_fetch_custom_list_callback');;
+        $this->loader->add_action('admin_action_add_from_soundcloud', $add_from_soundcloud, 'add_from_soundcloud' );
+
 
         $this->loader->add_action( 'wp_ajax_uploader_callback',$plugin_post_creator, 'uploaderCallback' );
         $this->loader->add_action('wp_ajax_get_songs', $frontend_link, 'getSongs');

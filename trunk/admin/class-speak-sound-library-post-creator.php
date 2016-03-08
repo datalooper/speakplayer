@@ -1,24 +1,19 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: vcimo5
- * Date: 1/29/15
- * Time: 5:38 PM
+ * This class provides utilities to create sound entries.
  */
 
 class Speak_Sound_Library_Post_Creator {
 
     public $attachment;
     public $custom_post_type;
+
+    //Sets the custom post type name
     public function __construct($custom_post_type)
     {
         $this->custom_post_type = $custom_post_type;
-        $this->load_dependencies();
     }
 
-    private function load_dependencies()
-    {
-    }
 
     function uploaderCallback() {
         $this->attachment = $_POST['attachment'];
